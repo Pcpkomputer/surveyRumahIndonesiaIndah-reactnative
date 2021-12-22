@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "surveyRumahIndonesiaIndah-reactnative",
+    "slug": "surveyRumahIndonesiaIndah-reactnative",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "surveyRumahIndonesiaIndah-reactnative"
+}
