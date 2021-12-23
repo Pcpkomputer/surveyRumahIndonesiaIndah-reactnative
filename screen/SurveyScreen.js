@@ -4,7 +4,9 @@ import { StyleSheet, Text, View,Dimensions, Pressable,TextInput, TouchableOpacit
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { StatusBarHeight } from '../utils/heightUtils';
-import { AntDesign, FontAwesome, MaterialIcons, Entypo } from '@expo/vector-icons'; 
+import { AntDesign, FontAwesome, MaterialIcons, Entypo} from '@expo/vector-icons'; 
+
+import Carousel from "pinar";
 
 import LandingSVG from '../svg/LandingSVG';
 
@@ -109,10 +111,155 @@ export default function SurveyScreen() {
 
   let [showSelectAdaPDAM, setShowSelectAdaPDAM] = useState(false);
   let [adaPDAM, setAdaPDAM] = useState("Ada");
+  let [showModalAtasNamaPDAM, setShowModalAtasNamaPDAM] = useState(false);
+
+  let [showModalAmbilKordinat, setShowModalAmbilKordinat] = useState(false);
+
+  let [showModalAmbilViewJalan, setShowModalAmbilViewJalan] = useState(false);
+
+  let [fotoViewJalan ,setFotoViewJalan] = useState([
+      {
+          uri:""
+      },
+      {
+          uri:""
+      }
+  ]);
 
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
 
+        {
+            (showModalAmbilViewJalan) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowModalAmbilViewJalan(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),height:EStyleSheet.value("300rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ambil Foto View Jalan</Text>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("20rem"),flex:1,paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <Carousel>
+                            <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                 <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                    {
+                                        (fotoViewJalan[0].uri) ?
+                                        <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:fotoViewJalan[0].uri}}/>
+                                        :
+                                        <TouchableOpacity
+                                        onPress={async ()=>{
+                                            let capture = await ImagePicker.launchCameraAsync();
+                                            if(!capture.cancelled){
+                                                setFotoViewJalan((prev)=>{
+                                                    return prev.map((item,index)=>{
+                                                        if(index===0){
+                                                            return {
+                                                                ...item,
+                                                                uri:capture.uri
+                                                            }
+                                                        }
+                                                        return item;
+                                                    })
+                                                })
+                                            }
+                                            
+                                        }}
+                                        >
+                                            <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                            <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                    {
+                                        (fotoViewJalan[1].uri) ?
+                                        <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:fotoViewJalan[1].uri}}/>
+                                        :
+                                        <TouchableOpacity
+                                        onPress={async ()=>{
+                                            let capture = await ImagePicker.launchCameraAsync();
+                                            if(!capture.cancelled){
+                                                setFotoViewJalan((prev)=>{
+                                                    return prev.map((item,index)=>{
+                                                        if(index===1){
+                                                            return {
+                                                                ...item,
+                                                                uri:capture.uri
+                                                            }
+                                                        }
+                                                        return item;
+                                                    })
+                                                })
+                                            }
+                                            
+                                        }}
+                                        >
+                                            <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                        </Carousel>
+                    </View>
+                </View>
+            </View>
+        }
+
+        {
+            (showModalAmbilKordinat) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowModalAmbilKordinat(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ambil Kordinat GPS</Text>
+                    </View>
+                   <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Latitude"/>
+                    </View>
+                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Longitude"/>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("5rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),marginRight:EStyleSheet.value("15rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                            <Text>Ambil Kordinat</Text>
+                        </View>
+                        <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                            <Text>Cek Google Map</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        }
+
+        {
+            (showModalAtasNamaPDAM) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowModalAtasNamaPDAM(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("10rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Isi Nomor & Atas Nama PDAM</Text>
+                    </View>
+                   <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Nomor"/>
+                    </View>
+                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Atas Nama"/>
+                    </View>
+                </View>
+            </View>
+        }
 
         {
             (showSelectAdaPDAM) &&
@@ -810,7 +957,7 @@ export default function SurveyScreen() {
                    <TouchableOpacity
                    activeOpacity={0.6} 
                    onPress={()=>{
-                       //setShowModalInputKendaraan(true);
+                       setShowModalAtasNamaPDAM(true);
                    }}
                    style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
                        <Text style={{color:"black"}}>No, atas nama</Text>
@@ -818,9 +965,127 @@ export default function SurveyScreen() {
                }
             </View>
         </View>
-        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
-            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>INFORMASI TENTANG PENJUAL</Text>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Lingkungan</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput style={{flex:1}} placeholder='Lingkungan'/>
+            </View>
         </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Riwayat Properti</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput multiline={true} style={{flex:1}} placeholder='Riwayat Properti'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Pasar Terdekat</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput style={{flex:1}} placeholder='Pasar Terdekat'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Sekolah Terdekat</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput style={{flex:1}} placeholder='Sekolah Terdekat'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Stasiun KA/halte bus terdekat</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jarak ke jalur bis/mikrolet terdekat</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jalur Bus/Mikrolet No.</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Pros</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput multiline={true} style={{flex:1}} placeholder='Pros'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Cons</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput multiline={true} style={{flex:1}} placeholder='Cons'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Google Maps</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity
+                    activeOpacity={0.6} 
+                    onPress={()=>{
+                        setShowModalAmbilKordinat(true);
+                    }}
+                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                        <Text style={{color:"black"}}>Ambil Kordinat</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Foto View Jalan</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity
+                    activeOpacity={0.6} 
+                    onPress={()=>{
+                        setShowModalAmbilViewJalan(true);
+                    }}
+                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                        <Text style={{color:"black"}}>Ambil Foto</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Foto Rumah</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity
+                    activeOpacity={0.6} 
+                    onPress={()=>{
+                        //setShowModalAmbilViewJalan(true);
+                    }}
+                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                        <Text style={{color:"black"}}>Ambil Foto</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        {/* <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>INFORMASI TENTANG PENJUAL</Text>
+        </View> */}
+        
        </ScrollView>
     </View>
   );

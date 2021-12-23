@@ -60,7 +60,7 @@ export default function LoginScreen() {
                       dense={true}
                       underlineColor={emailerror.error ? "#d43b3b":undefined}
                      activeUnderlineColor={emailerror.error ? "#d43b3b":'#38d49f'}
-                      style={{backgroundColor:"white"}}
+                      style={{backgroundColor:"#f0f5fb"}}
                       label="Email"
                       value={email}
                       onChangeText={(text)=>{
@@ -86,7 +86,7 @@ export default function LoginScreen() {
                    selectionColor='#38d49f'
                    underlineColor={passworderror.error ? "#d43b3b":undefined}
                    activeUnderlineColor={passworderror.error ? "#d43b3b":'#38d49f'}
-                      style={{backgroundColor:"white"}}
+                      style={{backgroundColor:"#f0f5fb"}}
                       label="Password"
                       secureTextEntry={true}
                       value={password}
