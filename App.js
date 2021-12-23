@@ -1,13 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View,Dimensions } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
+
+import LandingScreen from './screen/LandingScreen';
+import LoginScreen from './screen/LoginScreen';
+import DashboardScreen from './screen/DashboardScreen';
+import SurveyScreen from './screen/SurveyScreen';
+
+import { useFonts } from 'expo-font';
+
+const entireScreenWidth = Dimensions.get('window').width;
+EStyleSheet.build({$rem: entireScreenWidth / 380});
+
 
 export default function App() {
+
+  const [loaded] = useFonts({
+    Nunito: require('./fonts/Nunito-Regular.ttf'),
+    NunitoMedium: require('./fonts/Nunito-Medium.ttf'),
+    NunitoBold: require('./fonts/Nunito-Bold.ttf')
+  });
+  
+  if (!loaded) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SurveyScreen/>
   );
 }
 
