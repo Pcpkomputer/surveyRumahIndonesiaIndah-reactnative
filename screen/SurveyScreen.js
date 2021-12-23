@@ -74,16 +74,214 @@ export default function SurveyScreen() {
   let [sedangDigadaikan, setSedangDigadaikan] = useState("Tidak");
   let [selectSedangDigadaikan, setSelectSedangDigadaikan] = useState(false);
   let [showSedangDigadaikan, setShowSedangDigadaikan] = useState(false);
-  let [showTidakSedangDigadaikan, setShowTidakSedangDigadaikan] = useState(true);
+  let [showTidakSedangDigadaikan, setShowTidakSedangDigadaikan] = useState(false);
 
   let [sedangdigadaikanketerangan,setSedangDigadaikanKeterangan] = useState("");
 
   let [dokumensedangdigadaikan, setDokumenSedangDigadaikan] = useState("");
 
-  let [adaIMB, setAdaIMB] = useState("Ya");
+  let [adaIMB, setAdaIMB] = useState("Tidak ada");
+
+  let [showSelectIMB, setShowSelectIMB] = useState(false);
+
+  let [showIsiNoTglIMB, setShowIsiNoTglIMB] = useState(false);
+
+  let [kapandibangun, setKapanDibangun] = useState("Baru");
+
+  let [showSelectKapanDibangun ,setShowSelectKapanDibangun] = useState(false);
+  
+  let [listKapanDibangun, setListKapanDibangun] = useState([
+      "Baru",
+      "1-2 tahun lalu",
+      "3-5 tahun lalu",
+      "6-10 tahun lalu",
+      "11-20 tahun lalu"
+  ]);
+
+  let [kondisirumah, setKondisiRumah] = useState("Tidak butuh perbaikan");
+  let [showSelectKondisiRumah, setShowSelectKondisiRumah] = useState(false);
+  let [listKondisiRumah, setListKondisiRumah] = useState([
+      "Tidak butuh perbaikan",
+      "Butuh sedikit perbaikan",
+      "Butuh banyak perbaikan",
+      "Harus dibangun ulang"
+  ]);
+
+  let [showSelectAdaPDAM, setShowSelectAdaPDAM] = useState(false);
+  let [adaPDAM, setAdaPDAM] = useState("Ada");
 
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+
+        {
+            (showSelectAdaPDAM) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectAdaPDAM(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada PDAM</Text>
+                    </View>
+                    <Pressable 
+                    onPress={()=>{
+                        setAdaPDAM("Ada");
+                        setShowSelectAdaPDAM(false);
+                    }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={()=>{
+                            setAdaPDAM("Tidak ada");
+                            setShowSelectAdaPDAM(false);
+                        }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Tidak ada</Text>
+                    </Pressable>
+                </View>
+            </View>
+        }
+
+
+        {
+            (showSelectKondisiRumah) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectKondisiRumah(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Kondisi Rumah</Text>
+                    </View>
+                    <ScrollView style={{height:EStyleSheet.value("200rem")}}>
+                        {
+                            listKondisiRumah.map((item,index)=>{
+                                return (
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setKondisiRumah(item);
+                                        setShowSelectKondisiRumah(false);
+                                    }}
+                                    android_ripple={{
+                                        color:"#e8e8e8"
+                                    }}
+                                    style={{paddingVertical:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center"}}>
+                                        <Text>{item}</Text>
+                                    </Pressable>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                </View>
+            </View>
+        }
+
+        {
+            (showSelectKapanDibangun) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectKapanDibangun(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Kapan Kira" Dibangun?</Text>
+                    </View>
+                    <ScrollView style={{height:EStyleSheet.value("200rem")}}>
+                        {
+                            listKapanDibangun.map((item,index)=>{
+                                return (
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setKapanDibangun(item);
+                                        setShowSelectKapanDibangun(false);
+                                    }}
+                                    android_ripple={{
+                                        color:"#e8e8e8"
+                                    }}
+                                    style={{paddingVertical:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center"}}>
+                                        <Text>{item}</Text>
+                                    </Pressable>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                </View>
+            </View>
+        }
+
+        {
+            (showIsiNoTglIMB) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowIsiNoTglIMB(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("10rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Isi Nomor & Tanggal IMB</Text>
+                    </View>
+                   <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Nomor"/>
+                    </View>
+                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Tanggal"/>
+                    </View>
+                </View>
+            </View>
+        }
+
+        {
+            (showSelectIMB) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectIMB(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada IMB?</Text>
+                    </View>
+                    <Pressable 
+                    onPress={()=>{
+                        setAdaIMB("Ada");
+                        setShowSelectIMB(false);
+                    }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={()=>{
+                            setAdaIMB("Tidak ada");
+                            setShowSelectIMB(false);
+                        }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Tidak ada</Text>
+                    </Pressable>
+                </View>
+            </View>
+        }
 
         {
             (showTidakSedangDigadaikan) &&
@@ -280,6 +478,8 @@ export default function SurveyScreen() {
                 </View>
             </View>
         }
+
+
 
 
         {
@@ -512,19 +712,114 @@ export default function SurveyScreen() {
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Ada IMB</Text>
             </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setShowSelectIMB(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{adaIMB}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+                    {
+                   (adaIMB==="Ada") &&
+                        <TouchableOpacity
+                        activeOpacity={0.6} 
+                        onPress={()=>{
+                            setShowIsiNoTglIMB(true);
+                        }}
+                        style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                            <Text style={{color:"black"}}>Isi No. & Tgl</Text>
+                        </TouchableOpacity>
+                    }
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Kapan Kira" Dibangun</Text>
+            </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        //setSelectJenisSuratTanah(true);
+                        setShowSelectKapanDibangun(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
-                            <Text>Ya</Text>
+                            <Text>{kapandibangun}</Text>
                             <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
                         </View>
                     </TouchableOpacity>
             </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Kondisi Rumah</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setShowSelectKondisiRumah(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{kondisirumah}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>No. ID PLN</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput style={{flex:1}} placeholder='No. ID PLN'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>ID PLN Atas Nama</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput style={{flex:1}} placeholder='ID PLN Atas Nama'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Ada PDAM</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TouchableOpacity 
+                activeOpacity={0.7}
+                onPress={()=>{
+                    setShowSelectAdaPDAM(true);
+                }}
+                style={{flexDirection:"row"}}>
+                    <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                        <Text>{adaPDAM}</Text>
+                        <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                    </View>
+                </TouchableOpacity>
+               {
+                   (adaPDAM==="Ada") &&
+                   <TouchableOpacity
+                   activeOpacity={0.6} 
+                   onPress={()=>{
+                       //setShowModalInputKendaraan(true);
+                   }}
+                   style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                       <Text style={{color:"black"}}>No, atas nama</Text>
+                   </TouchableOpacity>
+               }
+            </View>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>INFORMASI TENTANG PENJUAL</Text>
         </View>
        </ScrollView>
     </View>

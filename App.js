@@ -27,7 +27,7 @@ export default function App() {
   }
 
   return (
-    <SurveyScreen/>
+    <LandingScreen/>
   );
 }
 
