@@ -8,6 +8,9 @@ import { AntDesign, FontAwesome, MaterialIcons, Entypo } from '@expo/vector-icon
 
 import LandingSVG from '../svg/LandingSVG';
 
+import * as MediaLibrary from 'expo-media-library';
+import * as ImagePicker from 'expo-image-picker';
+
 let shadow = {
     shadowColor: "#000",
 shadowOffset: {
@@ -77,6 +80,8 @@ export default function SurveyScreen() {
 
   let [dokumensedangdigadaikan, setDokumenSedangDigadaikan] = useState("");
 
+  let [adaIMB, setAdaIMB] = useState("Ya");
+
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
 
@@ -94,12 +99,36 @@ export default function SurveyScreen() {
                     </View>
                     <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
                         <View style={{flexDirection:"row"}}>
-                            <View style={{backgroundColor:"#e8e8e8",paddingVertical:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("5rem"),marginRight:EStyleSheet.value("15rem"),flex:1}}>
+                            <TouchableOpacity 
+                            activeOpacity={0.8}
+                            onPress={async ()=>{
+                                let result = await ImagePicker.launchImageLibraryAsync({
+                                    mediaTypes: ImagePicker.MediaTypeOptions.All,
+                                    allowsEditing: true,
+                                    aspect: [4, 3],
+                                    quality: 1,
+                                  });
+                            
+                              
+                                  if (!result.cancelled) {
+                                    setDokumenSedangDigadaikan(result.uri);
+                                  }
+                            }}
+                            style={{backgroundColor:"#e8e8e8",paddingVertical:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("5rem"),marginRight:EStyleSheet.value("15rem"),flex:1}}>
                                 <Text>Galeri</Text>
-                            </View>
-                            <View style={{backgroundColor:"#e8e8e8",paddingVertical:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("5rem"),flex:1}}>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                            activeOpacity={0.8}
+                            onPress={async ()=>{
+                                let permission = await ImagePicker.requestCameraRollPermissionsAsync();
+                                if(permission.granted){
+                                    let result = await ImagePicker.launchCameraAsync();
+                                    setDokumenSedangDigadaikan(result.uri);
+                                }
+                            }}
+                            style={{backgroundColor:"#e8e8e8",paddingVertical:EStyleSheet.value("5rem"),justifyContent:"center",alignItems:"center",borderRadius:EStyleSheet.value("5rem"),flex:1}}>
                                 <Text>Kamera</Text>
-                            </View>
+                            </TouchableOpacity>
                         </View>
                         <View style={{marginTop:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",height:EStyleSheet.value("300rem"),backgroundColor:"whitesmoke"}}>
                              {
@@ -477,6 +506,24 @@ export default function SurveyScreen() {
                             <Text style={{color:"black"}}>Beri Keterangan & FC</Text>
                         </TouchableOpacity>
                     }
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Ada IMB</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        //setSelectJenisSuratTanah(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>Ya</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
             </View>
         </View>
        </ScrollView>
