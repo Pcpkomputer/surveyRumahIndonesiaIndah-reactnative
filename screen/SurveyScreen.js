@@ -126,8 +126,93 @@ export default function SurveyScreen() {
       }
   ]);
 
+  let [showModalAmbilFotoRumah ,setShowModalAmbilFotoRumah] = useState(true);
+
+  let [fotoRumah ,setFotoRumah] = useState([
+    {
+        uri:""
+    },
+    {
+        uri:""
+    },
+    {
+        uri:""
+    },
+    {
+        uri:""
+    },
+    {
+        uri:""
+    },
+    {
+        uri:""
+    },
+    {
+        uri:""
+    },
+    {
+        uri:""
+    },
+]);
+
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+        {
+              (showModalAmbilFotoRumah) &&
+              <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                  <Pressable 
+                  onPress={()=>{
+                      setShowModalAmbilFotoRumah(false);
+                  }}
+                  style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                  <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),height:EStyleSheet.value("300rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                      <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                          <Text>Ambil Foto Rumah</Text>
+                      </View>
+                      <View style={{marginTop:EStyleSheet.value("20rem"),flex:1,paddingHorizontal:EStyleSheet.value("20rem")}}>
+                          <Carousel>
+                             {
+                                 [1,2,3,4,5,6,7,8].map((item,index)=>{
+                                     return (
+                                        <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                                <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                                {
+                                                    (fotoRumah[index].uri) ?
+                                                    <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:fotoRumah[index].uri}}/>
+                                                    :
+                                                    <TouchableOpacity
+                                                    onPress={async ()=>{
+                                                        let capture = await ImagePicker.launchCameraAsync();
+                                                        if(!capture.cancelled){
+                                                            setFotoRumah((prev)=>{
+                                                                return prev.map((item,i)=>{
+                                                                    if(i===index){
+                                                                        return {
+                                                                            ...item,
+                                                                            uri:capture.uri
+                                                                        }
+                                                                    }
+                                                                    return item;
+                                                                })
+                                                            })
+                                                        }
+                                                        
+                                                    }}
+                                                    >
+                                                        <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                                    </TouchableOpacity>
+                                                }
+                                            </View>
+                                        </View>
+                                     )
+                                 })
+                             }
+                          </Carousel>
+                      </View>
+                  </View>
+              </View>
+        }
 
         {
             (showModalAmbilViewJalan) &&
@@ -1075,7 +1160,7 @@ export default function SurveyScreen() {
                     <TouchableOpacity
                     activeOpacity={0.6} 
                     onPress={()=>{
-                        //setShowModalAmbilViewJalan(true);
+                        setShowModalAmbilFotoRumah(true);
                     }}
                     style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
                         <Text style={{color:"black"}}>Ambil Foto</Text>
