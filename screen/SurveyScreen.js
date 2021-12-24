@@ -6,6 +6,8 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { StatusBarHeight } from '../utils/heightUtils';
 import { AntDesign, FontAwesome, MaterialIcons, Entypo} from '@expo/vector-icons'; 
 
+import { Checkbox } from 'react-native-paper';
+
 import Carousel from "pinar";
 
 import LandingSVG from '../svg/LandingSVG';
@@ -126,7 +128,7 @@ export default function SurveyScreen() {
       }
   ]);
 
-  let [showModalAmbilFotoRumah ,setShowModalAmbilFotoRumah] = useState(true);
+  let [showModalAmbilFotoRumah ,setShowModalAmbilFotoRumah] = useState(false);
 
   let [fotoRumah ,setFotoRumah] = useState([
     {
@@ -153,10 +155,194 @@ export default function SurveyScreen() {
     {
         uri:""
     },
-]);
+    ]);
+
+  let [showModalSuratKepemilikan, setShowModalSuratKepemilikan] = useState(false);
+
+
+  let [suratkepemilikan, setSuratKepemilikan] = useState([
+    {
+        uri:""
+    },
+    {
+        uri:""
+    },
+    {
+        uri:""
+    },
+    ]);
+
+ let [adaPBB, setAdaPBB] = useState("Tidak ada");
+ let [showSelectAdaPBB, setShowSelectAdaPBB] = useState(false);
+
+ let [showModalDetailPBB, setShowModalDetailPBB] = useState(true);
+ let [pbbSudahLunas, setPBBSudahLunas] = useState(false);
+
+ let [lampiranPBB, setLampiranPBB] = useState("");
 
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+        {
+            (showModalDetailPBB) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowModalDetailPBB(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Detail PBB</Text>
+                    </View>
+                    <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginTop:EStyleSheet.value("10rem"),flexDirection:"row"}}>
+                         <View style={{flex:1,flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
+                             <Text>Sudah Lunas</Text>
+                            <Checkbox
+                                color="#e8e8e8"
+                                status={(pbbSudahLunas) ? 'checked':'unchecked'}
+                                onPress={() => {
+                                    setPBBSudahLunas(true);
+                                }}
+                                />
+                         </View>
+                         <View style={{flex:1,flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
+                             <Text>Belum Lunas</Text>
+                            <Checkbox
+                                color="#e8e8e8"
+                                status={(pbbSudahLunas===false) ? 'checked':'unchecked'}
+                                onPress={() => {
+                                    setPBBSudahLunas(false);
+                                }}
+                                />
+                         </View>
+                    </View>
+                    <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginTop:EStyleSheet.value("10rem")}}>
+                        {
+                            (!pbbSudahLunas) &&
+                            <View>
+                                <TextInput placeholder="PBB Terakhir Tahun Kapan"/>
+                            </View>
+                        }
+                        <View style={{backgroundColor:"whitesmoke",justifyContent:"center",alignItems:"center",marginTop:EStyleSheet.value("10rem"),height:EStyleSheet.value("250rem")}}>
+                               {
+                                   (lampiranPBB) ?
+                                   <Image resizeMode="contain" source={{uri:lampiranPBB}} style={{width:"100%",height:"100%"}}></Image>
+                                   :
+                                   <TouchableOpacity
+                                   onPress={async ()=>{
+                                       let capture = await ImagePicker.launchCameraAsync();
+                                       if(!capture.cancelled){
+                                          setLampiranPBB(capture.uri);
+                                       }
+                                       
+                                   }}
+                                   >
+                                       <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                   </TouchableOpacity>
+                               }
+                        </View>
+                    </View>
+                </View>
+            </View>
+        }
+
+
+        {
+            (showSelectAdaPBB) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectAdaPBB(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada PBB</Text>
+                    </View>
+                    <Pressable 
+                    onPress={()=>{
+                        setAdaPBB("Ada");
+                        setShowSelectAdaPBB(false);
+                    }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={()=>{
+                            setAdaPBB("Tidak ada");
+                            setShowSelectAdaPBB(false);
+                        }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Tidak ada</Text>
+                    </Pressable>
+                </View>
+            </View>
+        }
+
+
+        {
+              (showModalSuratKepemilikan) &&
+              <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                  <Pressable 
+                  onPress={()=>{
+                      setShowModalSuratKepemilikan(false);
+                  }}
+                  style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                  <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),height:EStyleSheet.value("300rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                      <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                          <Text>FC Surat Kepemilikan Tanah</Text>
+                      </View>
+                      <View style={{marginTop:EStyleSheet.value("20rem"),flex:1,paddingHorizontal:EStyleSheet.value("20rem")}}>
+                          <Carousel>
+                             {
+                                 [1,2,3].map((item,index)=>{
+                                     return (
+                                        <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                                <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                                {
+                                                    (suratkepemilikan[index].uri) ?
+                                                    <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:suratkepemilikan[index].uri}}/>
+                                                    :
+                                                    <TouchableOpacity
+                                                    onPress={async ()=>{
+                                                        let capture = await ImagePicker.launchCameraAsync();
+                                                        if(!capture.cancelled){
+                                                            setSuratKepemilikan((prev)=>{
+                                                                return prev.map((item,i)=>{
+                                                                    if(i===index){
+                                                                        return {
+                                                                            ...item,
+                                                                            uri:capture.uri
+                                                                        }
+                                                                    }
+                                                                    return item;
+                                                                })
+                                                            })
+                                                        }
+                                                        
+                                                    }}
+                                                    >
+                                                        <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                                    </TouchableOpacity>
+                                                }
+                                            </View>
+                                        </View>
+                                     )
+                                 })
+                             }
+                          </Carousel>
+                      </View>
+                  </View>
+              </View>
+        }
+
 
         {
               (showModalAmbilFotoRumah) &&
@@ -1167,10 +1353,140 @@ export default function SurveyScreen() {
                     </TouchableOpacity>
             </View>
         </View>
-        {/* <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>FC Surat Kepemilikan Tanah</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity
+                    activeOpacity={0.6} 
+                    onPress={()=>{
+                        setShowModalSuratKepemilikan(true);
+                    }}
+                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                        <Text style={{color:"black"}}>Ambil Foto</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Ada PBB</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TouchableOpacity 
+                activeOpacity={0.7}
+                onPress={()=>{
+                    setShowSelectAdaPBB(true);
+                }}
+                style={{flexDirection:"row"}}>
+                    <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                        <Text>{adaPBB}</Text>
+                        <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                    </View>
+                </TouchableOpacity>
+               {
+                   (adaPBB==="Ada") &&
+                   <TouchableOpacity
+                   activeOpacity={0.6} 
+                   onPress={()=>{
+                       setShowModalDetailPBB(true);
+                   }}
+                   style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                       <Text style={{color:"black"}}>Detail PBB</Text>
+                   </TouchableOpacity>
+               }
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Permintaan</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
+            </View>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
             <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>INFORMASI TENTANG PENJUAL</Text>
-        </View> */}
-        
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Nama Penjual</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput multiline={true} style={{flex:1}} placeholder='Nama Penjual'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>NIK</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput multiline={true} style={{flex:1}} placeholder='NIK'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>FC KTP</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity
+                    activeOpacity={0.6} 
+                    onPress={()=>{
+                       // setShowModalAmbilViewJalan(true);
+                    }}
+                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                        <Text style={{color:"black"}}>Ambil Foto</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>FC KK</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity
+                    activeOpacity={0.6} 
+                    onPress={()=>{
+                        //setShowModalAmbilViewJalan(true);
+                    }}
+                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                        <Text style={{color:"black"}}>Ambil Foto</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Alamat Sesuai KTP</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput placeholder='Line 1'/>
+                <TextInput placeholder='Line 2'/>
+                <TextInput placeholder='RT/RW'/>
+                <TextInput placeholder='Kel/Desa'/>
+                <TextInput placeholder='Kecamatan'/>
+                <TextInput placeholder='Kabupaten/Kota'/>
+                <TextInput placeholder='Provinsi'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Alamat Domisili</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput placeholder='Sama dengan alamat KTP'/>
+                <TextInput placeholder='Beda dengan alamat KTP'/>
+                <TextInput placeholder='RT/RW'/>
+                <TextInput placeholder='Kel/Desa'/>
+                <TextInput placeholder='Kecamatan'/>
+                <TextInput placeholder='Kabupaten/Kota'/>
+                <TextInput placeholder='Provinsi'/>
+            </View>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+            <View style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
+                <Text>Simpan</Text>
+            </View>
+        </View>
        </ScrollView>
     </View>
   );
