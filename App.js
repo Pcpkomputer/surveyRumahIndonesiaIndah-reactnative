@@ -9,9 +9,15 @@ import DashboardScreen from './screen/DashboardScreen';
 import SurveyScreen from './screen/SurveyScreen';
 
 import { useFonts } from 'expo-font';
+import { NavigationContainer } from '@react-navigation/native';
+
+import { createStackNavigator } from '@react-navigation/stack';
 
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({$rem: entireScreenWidth / 380});
+
+const Stack = createStackNavigator();
+
 
 
 export default function App() {
@@ -27,7 +33,30 @@ export default function App() {
   }
 
   return (
-    <SurveyScreen/>
+      <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Landing" 
+        options={{
+           headerShown:false
+        }}
+        component={LandingScreen} />
+        <Stack.Screen name="Login" 
+        options={{
+           headerShown:false
+        }}
+        component={LoginScreen} />
+         <Stack.Screen name="Dashboard" 
+        options={{
+           headerShown:false
+        }}
+        component={DashboardScreen} />
+         <Stack.Screen name="Survey" 
+        options={{
+           headerShown:false
+        }}
+        component={SurveyScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

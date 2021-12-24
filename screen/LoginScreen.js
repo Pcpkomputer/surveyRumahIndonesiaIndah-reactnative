@@ -9,6 +9,7 @@ import LandingSVG from '../svg/LandingSVG';
 import { ActivityIndicator, TextInput } from 'react-native-paper';
 
 import { Ionicons , AntDesign, MaterialIcons} from '@expo/vector-icons'; 
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 let shadow = {
     shadowColor: "#000",
@@ -22,7 +23,7 @@ shadowRadius: 3.84,
 elevation: 5,
 }
 
-export default function LoginScreen() {
+export default function LoginScreen(props) {
 
 
   let [loginLoading, setLoginLoading] = useState(false);
@@ -49,7 +50,13 @@ export default function LoginScreen() {
     <View style={{flex:1,backgroundColor:"#f0f5fb"}}>
         <View style={{height:StatusBarHeight}}></View>
         <View style={{height:EStyleSheet.value("70rem"),paddingHorizontal:EStyleSheet.value("30rem"),flexDirection:"row",alignItems:"center"}}>
-          <AntDesign name="arrowleft" size={24} color="grey" />
+           <TouchableOpacity activeOpacity={0.7}
+           onPress={()=>{
+            props.navigation.goBack();
+           }}
+           >
+           <AntDesign name="arrowleft" size={24} color="grey" />
+           </TouchableOpacity>
         </View>
         <View style={{flex:1,justifyContent:"center",alignItems:"center",paddingBottom:EStyleSheet.value("30rem")}}>
              <View style={{width:"100%",paddingHorizontal:EStyleSheet.value("30rem")}}>
@@ -58,6 +65,7 @@ export default function LoginScreen() {
              <View style={{width:"100%",marginTop:EStyleSheet.value("40rem"),paddingHorizontal:EStyleSheet.value("30rem")}}>
                   <TextInput
                       dense={true}
+                      keyboardType="email-address"
                       underlineColor={emailerror.error ? "#d43b3b":undefined}
                      activeUnderlineColor={emailerror.error ? "#d43b3b":'#38d49f'}
                       style={{backgroundColor:"#f0f5fb"}}
@@ -147,6 +155,10 @@ export default function LoginScreen() {
                                  }
 
                                  setLoginLoading(true);
+
+                                 props.navigation.navigate("Dashboard");
+
+                                 setLoginLoading(false);
  
                                  
                                } catch (error) {

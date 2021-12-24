@@ -19,7 +19,7 @@ shadowRadius: 3.84,
 elevation: 5,
 }
 
-export default function LandingScreen() {
+export default function LandingScreen(props) {
   return (
     <View style={{flex:1,backgroundColor:"#f0f5fb"}}>
         <View style={{height:StatusBarHeight}}></View>
@@ -39,6 +39,9 @@ export default function LandingScreen() {
                 <Pressable
                 android_ripple={{
                     color:"white"
+                }}
+                onPress={()=>{
+                    props.navigation.navigate("Login");
                 }}
                 style={{width:"100%",paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center"}}
                 >

@@ -175,7 +175,7 @@ export default function SurveyScreen() {
  let [adaPBB, setAdaPBB] = useState("Tidak ada");
  let [showSelectAdaPBB, setShowSelectAdaPBB] = useState(false);
 
- let [showModalDetailPBB, setShowModalDetailPBB] = useState(true);
+ let [showModalDetailPBB, setShowModalDetailPBB] = useState(false);
  let [pbbSudahLunas, setPBBSudahLunas] = useState(false);
 
  let [lampiranPBB, setLampiranPBB] = useState("");

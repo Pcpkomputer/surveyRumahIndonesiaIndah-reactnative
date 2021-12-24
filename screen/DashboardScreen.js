@@ -24,7 +24,7 @@ shadowRadius: 3.84,
 elevation: 5,
 }
 
-export default function DashboardScreen() {
+export default function DashboardScreen(props) {
   return (
     <View style={{flex:1,backgroundColor:"#f0f5fb"}}>
         <View style={{height:StatusBarHeight}}></View>
@@ -65,7 +65,7 @@ export default function DashboardScreen() {
                         <TouchableOpacity 
                         activeOpacity={0.8}
                         onPress={()=>{
-                            alert("123");
+                            props.navigation.navigate("Survey");
                         }}
                         style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>
                             <SurveySVG
