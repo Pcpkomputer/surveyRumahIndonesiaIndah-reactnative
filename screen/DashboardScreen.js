@@ -34,12 +34,17 @@ export default function DashboardScreen(props) {
                     <Entypo name="chevron-left" size={EStyleSheet.value("23rem")} color="#26313b" />
                 </View>
                 <View style={{flexDirection:"row"}}>
-                    <View style={{width:EStyleSheet.value("50rem"),marginRight:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem"),borderRadius:999,backgroundColor:"white"}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.8}
+                    onPress={()=>{
+                        alert("Profile Screen");
+                    }}
+                    style={{width:EStyleSheet.value("50rem"),marginRight:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem"),borderRadius:999,backgroundColor:"white"}}>
                         <MaterialCommunityIcons name="account-details" size={24} color="black" />
-                    </View>
-                    <View style={{width:EStyleSheet.value("50rem"),justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem"),borderRadius:999,backgroundColor:"white"}}>
+                    </TouchableOpacity>
+                    {/* <View style={{width:EStyleSheet.value("50rem"),justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem"),borderRadius:999,backgroundColor:"white"}}>
                         <Feather name="menu" size={24} color="black" />
-                    </View>
+                    </View> */}
                 </View>
             </View>
         </View>
@@ -54,7 +59,7 @@ export default function DashboardScreen(props) {
             <View style={{height:EStyleSheet.value("130rem"),paddingVertical:EStyleSheet.value("30rem")}}>
                 <View style={{paddingHorizontal:EStyleSheet.value("20rem")}}>
                     <View style={{width:"100%",backgroundColor:"#31bb8b",borderRadius:EStyleSheet.value("10rem"),padding:EStyleSheet.value("15rem")}}>
-                        <Text style={{color:"white",fontSize:EStyleSheet.value("30rem"),fontFamily:"NunitoBold"}}>320</Text>
+                        <Text style={{color:"white",fontSize:EStyleSheet.value("30rem"),fontFamily:"NunitoBold"}}>0</Text>
                         <Text style={{color:"white",fontSize:EStyleSheet.value("13rem"),marginTop:EStyleSheet.value("3rem")}}>Total pencapaian survey</Text>
                     </View>
                 </View>
@@ -89,13 +94,18 @@ export default function DashboardScreen(props) {
                         </TouchableOpacity>
                     </View>
                     <View style={{marginBottom:EStyleSheet.value("15rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
-                        <View style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>
+                        <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={()=>{
+                            props.navigation.navigate("SurveyTersimpan");
+                        }}
+                        style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>
                             <SavedSVG
                             width={EStyleSheet.value("80rem")}
                             height={EStyleSheet.value("80rem")}
                             />
                             <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey Tersimpan</Text>
-                        </View>
+                        </TouchableOpacity>
                         <View style={{backgroundColor:"white",opacity:0,paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1}}>
                             <Text style={{fontFamily:"NunitoBold",color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey</Text>
                         </View>
