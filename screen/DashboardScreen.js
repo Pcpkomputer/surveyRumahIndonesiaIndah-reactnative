@@ -74,14 +74,19 @@ export default function DashboardScreen(props) {
                             />
                             <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey</Text>
                         </TouchableOpacity>
-                        <View style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1}}>
+                        <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={()=>{
+                            props.navigation.navigate("RiwayatSurvey");
+                        }}
+                        style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1}}>
                            
                              <HistorySVG
                             width={EStyleSheet.value("80rem")}
                             height={EStyleSheet.value("80rem")}
                             />
                             <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Riwayat Survey</Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={{marginBottom:EStyleSheet.value("15rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
                         <View style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>

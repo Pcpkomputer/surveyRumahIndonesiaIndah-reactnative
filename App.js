@@ -7,6 +7,7 @@ import LandingScreen from './screen/LandingScreen';
 import LoginScreen from './screen/LoginScreen';
 import DashboardScreen from './screen/DashboardScreen';
 import SurveyScreen from './screen/SurveyScreen';
+import RiwayatSurveyScreen from './screen/RiwayatSurveyScreen';
 
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
@@ -55,6 +56,11 @@ export default function App() {
            headerShown:false
         }}
         component={SurveyScreen} />
+         <Stack.Screen name="RiwayatSurvey" 
+        options={{
+           headerShown:false
+        }}
+        component={RiwayatSurveyScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
