@@ -11,6 +11,8 @@ import RiwayatSurveyScreen from './screen/RiwayatSurveyScreen';
 import DetailRiwayatSurveyScreen from './screen/DetailRiwayatSurveyScreen';
 import SurveyTersimpanScreen from './screen/SurveyTersimpanScreen';
 
+import SurveyAwalScreen from './screen/SurveyAwalScreen';
+
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -73,6 +75,11 @@ export default function App() {
            headerShown:false
         }}
         component={SurveyTersimpanScreen} />
+         <Stack.Screen name="SurveyAwal" 
+        options={{
+           headerShown:false
+        }}
+        component={SurveyAwalScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

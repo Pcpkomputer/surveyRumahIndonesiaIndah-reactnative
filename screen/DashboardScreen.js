@@ -66,18 +66,72 @@ export default function DashboardScreen(props) {
             </View>
             <View style={{flex:1,backgroundColor:"white",borderTopRightRadius:EStyleSheet.value("30rem"),borderTopLeftRadius:EStyleSheet.value("30rem"),marginTop:EStyleSheet.value("15rem")}}>
                     <ScrollView>
-                    <View style={{marginTop:EStyleSheet.value("30rem"),marginBottom:EStyleSheet.value("15rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
+                    <View style={{marginTop:EStyleSheet.value("17rem"),paddingVertical:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <View style={{justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("5rem")}}>
+                        <Text style={{fontFamily:"NunitoBold",fontSize:EStyleSheet.value("17rem")}}>Survey Awal</Text>
+                        </View>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("15rem"),marginBottom:EStyleSheet.value("15rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
                         <TouchableOpacity 
                         activeOpacity={0.8}
                         onPress={()=>{
-                            props.navigation.navigate("Survey");
+                            props.navigation.navigate("SurveyAwal");
                         }}
                         style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>
                             <SurveySVG
                             width={EStyleSheet.value("80rem")}
                             height={EStyleSheet.value("80rem")}
                             />
-                            <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey</Text>
+                            <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey Awal</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={()=>{
+                            props.navigation.navigate("RiwayatSurvey");
+                        }}
+                        style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1}}>
+                           
+                             <HistorySVG
+                            width={EStyleSheet.value("80rem")}
+                            height={EStyleSheet.value("80rem")}
+                            />
+                            <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Riwayat Survey</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{marginBottom:EStyleSheet.value("15rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={()=>{
+                            props.navigation.navigate("SurveyTersimpan");
+                        }}
+                        style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>
+                            <SavedSVG
+                            width={EStyleSheet.value("80rem")}
+                            height={EStyleSheet.value("80rem")}
+                            />
+                            <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey Tersimpan</Text>
+                        </TouchableOpacity>
+                        <View style={{backgroundColor:"white",opacity:0,paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1}}>
+                            <Text style={{fontFamily:"NunitoBold",color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey</Text>
+                        </View>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("0rem"),paddingVertical:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <View style={{justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("5rem")}}>
+                        <Text style={{fontFamily:"NunitoBold",fontSize:EStyleSheet.value("17rem")}}>Survey Lanjutan</Text>
+                        </View>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("15rem"),marginBottom:EStyleSheet.value("15rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={()=>{
+                            //props.navigation.navigate("Survey");
+                        }}
+                        style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>
+                            <SurveySVG
+                            width={EStyleSheet.value("80rem")}
+                            height={EStyleSheet.value("80rem")}
+                            />
+                            <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey Lanjutan</Text>
                         </TouchableOpacity>
                         <TouchableOpacity 
                         activeOpacity={0.8}
