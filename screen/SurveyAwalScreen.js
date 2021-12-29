@@ -115,6 +115,12 @@ export default function SurveyAwalScreen() {
   let [adaPDAM, setAdaPDAM] = useState("Ada");
   let [showModalAtasNamaPDAM, setShowModalAtasNamaPDAM] = useState(false);
 
+  let [showSelectAdaPLN, setShowSelectAdaPLN] = useState(false);
+  let [adaPLN, setAdaPLN] = useState("Ada");
+
+  let [showSelectAdaSinyalInternet, setShowSelectAdaSinyalInternet] = useState(false);
+  let [adasinyalinternet,setAdaSinyalInternet] = useState("Tidak ada");
+
   let [showModalAmbilKordinat, setShowModalAmbilKordinat] = useState(false);
 
   let [showModalAmbilViewJalan, setShowModalAmbilViewJalan] = useState(false);
@@ -181,10 +187,276 @@ export default function SurveyAwalScreen() {
  let [lampiranPBB, setLampiranPBB] = useState("");
 
  let [objek, setObjek] = useState("Rumah");
- let [showSelectObjek, setShowSelectObjek] = useState(true);
+ let [showSelectObjek, setShowSelectObjek] = useState(false);
+
+ let [showSelectKebersihanDanKerapihan, setshowSelectKebersihanDanKerapihan] = useState(false);
+ let [kebersihandankerapihan, setKebersihanDanKerapihan] = useState("Cukup bersih dan rapih");
+ let [listKebersihanDanKerapihan, setListKebersihanDanKerapihan] = useState([
+     "Cukup bersih dan rapih",
+     "Tidak bersih/rapih",
+     "Kotor & berantakan"
+ ]);
+
+ let [showSelectJalan, setShowSelectJalan] = useState(false);
+ let [jalan, setJalan] = useState("Tanah");
+ let [listJalan, setListJalan] = useState([
+     "Tanah",
+     "Sirtu",
+     "Beton",
+     "Aspal"
+ ]);
+
+ let [jalanmasuk, setJalanMasuk] = useState("Masuk mobil");
+ let [showSelectJalanMasuk, setShowSelectJalanMasuk] = useState(false);
+
+ let [rawanbanjir, setRawanBanjir] = useState("A");
+ let [listRawanBanjir, setListRawanBanjir] = useState([
+     "A",
+     "B",
+     "C",
+     "D",
+     "E"
+ ]);
+ let [showSelectRawanBanjir, setShowSelectRawanBanjir] = useState(false);
+
+  let [keamanan, setKeamanan] = useState("A");
+  let [listKeamanan, setListKeamanan] = useState([
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ]);
+  let [showSelectKeamanan, setshowSelectKeamanan] = useState(false);
+
+  let [kebersihan, setKebersihan] = useState("A");
+  let [listKebersihan, setListKebersihan] = useState([
+    "A",
+    "B",
+    "C",
+    "D",
+    "E" 
+  ]);
+  let [showSelectKebersihan, setShowSelectKebersihan] = useState(false);
 
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+{
+            (showSelectKebersihan) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectKebersihan(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Kebersihan</Text>
+                    </View>
+                    <ScrollView style={{height:EStyleSheet.value("200rem")}}>
+                        {
+                            listKebersihan.map((item,index)=>{
+                                return (
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setKebersihan(item);
+                                        setShowSelectKebersihan(false);
+                                    }}
+                                    android_ripple={{
+                                        color:"#e8e8e8"
+                                    }}
+                                    style={{paddingVertical:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center"}}>
+                                        <Text>{item}</Text>
+                                    </Pressable>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                </View>
+            </View>
+        }
+
+        {
+            (showSelectKeamanan) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setshowSelectKeamanan(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Keamanan</Text>
+                    </View>
+                    <ScrollView style={{height:EStyleSheet.value("200rem")}}>
+                        {
+                            listKeamanan.map((item,index)=>{
+                                return (
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setKeamanan(item);
+                                        setshowSelectKeamanan(false);
+                                    }}
+                                    android_ripple={{
+                                        color:"#e8e8e8"
+                                    }}
+                                    style={{paddingVertical:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center"}}>
+                                        <Text>{item}</Text>
+                                    </Pressable>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                </View>
+            </View>
+        }
+
+        {
+            (showSelectRawanBanjir) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectRawanBanjir(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Rawan Banjir</Text>
+                    </View>
+                    <ScrollView style={{height:EStyleSheet.value("200rem")}}>
+                        {
+                            listRawanBanjir.map((item,index)=>{
+                                return (
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setRawanBanjir(item);
+                                        setShowSelectRawanBanjir(false);
+                                    }}
+                                    android_ripple={{
+                                        color:"#e8e8e8"
+                                    }}
+                                    style={{paddingVertical:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center"}}>
+                                        <Text>{item}</Text>
+                                    </Pressable>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                </View>
+            </View>
+        }
+
+        {
+            (showSelectJalanMasuk) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectJalanMasuk(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Objek</Text>
+                    </View>
+                    <Pressable 
+                    onPress={()=>{
+                        setJalanMasuk("Masuk mobil");
+                        setShowSelectJalanMasuk(false);
+                    }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Masuk mobil</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={()=>{
+                            setJalanMasuk("Tidak masuk mobil");
+                            setShowSelectJalanMasuk(false);
+                        }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Tidak masuk mobil</Text>
+                    </Pressable>
+                </View>
+            </View>
+        }
+
+
+        {
+            (showSelectJalan) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectJalan(true);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Jalan</Text>
+                    </View>
+                    <ScrollView style={{height:EStyleSheet.value("200rem")}}>
+                        {
+                            listJalan.map((item,index)=>{
+                                return (
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setJalan(item);
+                                        setShowSelectJalan(false);
+                                    }}
+                                    android_ripple={{
+                                        color:"#e8e8e8"
+                                    }}
+                                    style={{paddingVertical:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center"}}>
+                                        <Text>{item}</Text>
+                                    </Pressable>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                </View>
+            </View>
+        }
+
+
+        {
+            (showSelectKebersihanDanKerapihan) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setshowSelectKebersihanDanKerapihan(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Butuh Perbaikan</Text>
+                    </View>
+                    <ScrollView style={{height:EStyleSheet.value("200rem")}}>
+                        {
+                            listKebersihanDanKerapihan.map((item,index)=>{
+                                return (
+                                    <Pressable 
+                                    onPress={()=>{
+                                        setKebersihanDanKerapihan(item);
+                                        setshowSelectKebersihanDanKerapihan(false);
+                                    }}
+                                    android_ripple={{
+                                        color:"#e8e8e8"
+                                    }}
+                                    style={{paddingVertical:EStyleSheet.value("20rem"),justifyContent:"center",alignItems:"center"}}>
+                                        <Text>{item}</Text>
+                                    </Pressable>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                </View>
+            </View>
+        }
+
 
         {
             (showSelectObjek) &&
@@ -284,6 +556,45 @@ export default function SurveyAwalScreen() {
                                }
                         </View>
                     </View>
+                </View>
+            </View>
+        }
+
+
+        {
+            (showSelectAdaSinyalInternet) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectAdaSinyalInternet(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada Sinyal Internet</Text>
+                    </View>
+                    <Pressable 
+                    onPress={()=>{
+                        setAdaSinyalInternet("Ada");
+                        setShowSelectAdaSinyalInternet(false);
+                    }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={()=>{
+                            setAdaSinyalInternet("Tidak Ada");
+                            setShowSelectAdaSinyalInternet(false);
+                        }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Tidak ada</Text>
+                    </Pressable>
                 </View>
             </View>
         }
@@ -611,6 +922,44 @@ export default function SurveyAwalScreen() {
             </View>
         }
 
+        {
+            (showSelectAdaPLN) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectAdaPLN(true);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada PLN</Text>
+                    </View>
+                    <Pressable 
+                    onPress={()=>{
+                        setAdaPLN("Ada");
+                        setShowSelectAdaPLN(false);
+                    }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ada</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={()=>{
+                            setAdaPLN("Tidak ada");
+                            setShowSelectAdaPLN(false);
+                        }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Tidak ada</Text>
+                    </Pressable>
+                </View>
+            </View>
+        }
+
 
         {
             (showSelectKondisiRumah) &&
@@ -622,7 +971,7 @@ export default function SurveyAwalScreen() {
                 style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
                 <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
                     <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
-                        <Text>Kondisi Rumah</Text>
+                        <Text>Butuh Perbaikan</Text>
                     </View>
                     <ScrollView style={{height:EStyleSheet.value("200rem")}}>
                         {
@@ -1078,8 +1427,11 @@ export default function SurveyAwalScreen() {
         {
             (objek==="Rumah") &&
             <View>
-                <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
             <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>INFORMASI TENTANG RUMAH</Text>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>A. Alamat Objek</Text>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
@@ -1094,6 +1446,9 @@ export default function SurveyAwalScreen() {
                 <TextInput placeholder='Kabupaten/Kota'/>
                 <TextInput placeholder='Provinsi'/>
             </View>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>B. Arsitektur Rumah</Text>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
@@ -1158,15 +1513,15 @@ export default function SurveyAwalScreen() {
                }
             </View>
         </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Surat Tanah Atas Nama</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                 <TextInput style={{flex:1}} placeholder='Surat Tanah Atas Nama'/>
             </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+        </View> */}
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Jenis Surat Tanah</Text>
             </View>
@@ -1183,8 +1538,8 @@ export default function SurveyAwalScreen() {
                         </View>
                     </TouchableOpacity>
             </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+        </View> */}
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Sedang digadaikan/diberatkan?</Text>
             </View>
@@ -1223,8 +1578,8 @@ export default function SurveyAwalScreen() {
                         </TouchableOpacity>
                     }
             </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+        </View> */}
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Ada IMB</Text>
             </View>
@@ -1252,6 +1607,9 @@ export default function SurveyAwalScreen() {
                         </TouchableOpacity>
                     }
             </View>
+        </View> */}
+         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>C. Keadaan Rumah</Text>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
@@ -1273,7 +1631,7 @@ export default function SurveyAwalScreen() {
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
-                <Text>Kondisi Rumah</Text>
+                <Text>Butuh Perbaikan</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                     <TouchableOpacity 
@@ -1291,6 +1649,27 @@ export default function SurveyAwalScreen() {
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Kebersihan & Kerapihan</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setshowSelectKebersihanDanKerapihan(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{kebersihandankerapihan}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>D. Fasilitas</Text>
+        </View>
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>No. ID PLN</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
@@ -1304,10 +1683,39 @@ export default function SurveyAwalScreen() {
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                 <TextInput style={{flex:1}} placeholder='ID PLN Atas Nama'/>
             </View>
+        </View> */}
+         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Tersambung PLN</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TouchableOpacity 
+                activeOpacity={0.7}
+                onPress={()=>{
+                   setShowSelectAdaPLN(true);
+                }}
+                style={{flexDirection:"row"}}>
+                    <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                        <Text>{adaPLN}</Text>
+                        <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                    </View>
+                </TouchableOpacity>
+               {/* {
+                   (adaPDAM==="Ada") &&
+                   <TouchableOpacity
+                   activeOpacity={0.6} 
+                   onPress={()=>{
+                       setShowModalAtasNamaPDAM(true);
+                   }}
+                   style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                       <Text style={{color:"black"}}>No, atas nama</Text>
+                   </TouchableOpacity>
+               } */}
+            </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
-                <Text>Ada PDAM</Text>
+                <Text>Tersambung PDAM</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"column",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                 <TouchableOpacity 
@@ -1321,7 +1729,7 @@ export default function SurveyAwalScreen() {
                         <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
                     </View>
                 </TouchableOpacity>
-               {
+               {/* {
                    (adaPDAM==="Ada") &&
                    <TouchableOpacity
                    activeOpacity={0.6} 
@@ -1331,10 +1739,42 @@ export default function SurveyAwalScreen() {
                    style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
                        <Text style={{color:"black"}}>No, atas nama</Text>
                    </TouchableOpacity>
-               }
+               } */}
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Ada Sinyal Internet</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TouchableOpacity 
+                activeOpacity={0.7}
+                onPress={()=>{
+                    setShowSelectAdaSinyalInternet(true);
+                }}
+                style={{flexDirection:"row"}}>
+                    <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                        <Text>{adasinyalinternet}</Text>
+                        <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                    </View>
+                </TouchableOpacity>
+               {/* {
+                   (adaPDAM==="Ada") &&
+                   <TouchableOpacity
+                   activeOpacity={0.6} 
+                   onPress={()=>{
+                       setShowModalAtasNamaPDAM(true);
+                   }}
+                   style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                       <Text style={{color:"black"}}>No, atas nama</Text>
+                   </TouchableOpacity>
+               } */}
+            </View>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>E. Aksesbilitaas</Text>
+        </View>
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Lingkungan</Text>
             </View>
@@ -1348,6 +1788,42 @@ export default function SurveyAwalScreen() {
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                 <TextInput multiline={true} style={{flex:1}} placeholder='Riwayat Properti'/>
+            </View>
+        </View> */}
+         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Jalan</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setShowSelectJalan(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{jalan}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Jalan Masuk</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setShowSelectJalanMasuk(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{jalanmasuk}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1392,6 +1868,93 @@ export default function SurveyAwalScreen() {
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Perumahan/Kompleks Perumahan Terdekat</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
+            </View>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>F. Suasana Lingkungan</Text>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Rawan Banjir</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setShowSelectRawanBanjir(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{rawanbanjir}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Keamanan</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setshowSelectKeamanan(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{keamanan}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Kebersihan</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setShowSelectKebersihan(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{kebersihan}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>G. Harga</Text>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Permintaan Penjual</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Pasar</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TextInput multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
+            </View>
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>H. Foto & Geolokasi</Text>
+        </View>
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Pros</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
@@ -1405,7 +1968,7 @@ export default function SurveyAwalScreen() {
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                 <TextInput multiline={true} style={{flex:1}} placeholder='Cons'/>
             </View>
-        </View>
+        </View> */}
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Google Maps</Text>
@@ -1451,7 +2014,7 @@ export default function SurveyAwalScreen() {
                     </TouchableOpacity>
             </View>
         </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>FC Surat Kepemilikan Tanah</Text>
             </View>
@@ -1465,8 +2028,8 @@ export default function SurveyAwalScreen() {
                         <Text style={{color:"black"}}>Ambil Foto</Text>
                     </TouchableOpacity>
             </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+        </View> */}
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Ada PBB</Text>
             </View>
@@ -1494,16 +2057,9 @@ export default function SurveyAwalScreen() {
                    </TouchableOpacity>
                }
             </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
-            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
-                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Permintaan</Text>
-            </View>
-            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
-            </View>
-        </View>
-        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+        </View> */}
+       
+        {/* <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
             <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>INFORMASI TENTANG PENJUAL</Text>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1521,8 +2077,8 @@ export default function SurveyAwalScreen() {
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                 <TextInput multiline={true} style={{flex:1}} placeholder='NIK'/>
             </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+        </View> */}
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>FC KTP</Text>
             </View>
@@ -1551,8 +2107,8 @@ export default function SurveyAwalScreen() {
                         <Text style={{color:"black"}}>Ambil Foto</Text>
                     </TouchableOpacity>
             </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+        </View> */}
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Alamat Sesuai KTP</Text>
             </View>
@@ -1565,8 +2121,8 @@ export default function SurveyAwalScreen() {
                 <TextInput placeholder='Kabupaten/Kota'/>
                 <TextInput placeholder='Provinsi'/>
             </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+        </View> */}
+        {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Alamat Domisili</Text>
             </View>
@@ -1584,8 +2140,8 @@ export default function SurveyAwalScreen() {
             <View style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
                 <Text>Simpan</Text>
             </View>
-        </View>
-            </View> 
+        </View> */}
+        </View> 
         }
        </ScrollView>
     </View>
