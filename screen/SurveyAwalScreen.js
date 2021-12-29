@@ -125,6 +125,31 @@ export default function SurveyAwalScreen() {
 
   let [showModalAmbilViewJalan, setShowModalAmbilViewJalan] = useState(false);
 
+  let [showModalAmbilFotoTampakDariJalan, setShowModalAmbilFotoTampakDariJalan] = useState(false);
+
+  let [fotoTampakDariJalan, setFotoTampakDariJalan] = useState([
+      {
+          uri:""
+      },
+      {
+            uri:""
+        },
+        {
+            uri:""
+        },
+  ]);
+
+  let [showModalAmbilFotoTampakDepan, setShowModalAmbilFotoTampakDepan] = useState(false);
+
+  let [fotoTampakDepan, setFotoTampakDepan] = useState([
+    {
+        uri:""
+    },
+    {
+        uri:""
+    }
+  ]);
+
   let [fotoViewJalan ,setFotoViewJalan] = useState([
       {
           uri:""
@@ -134,9 +159,9 @@ export default function SurveyAwalScreen() {
       }
   ]);
 
-  let [showModalAmbilFotoRumah ,setShowModalAmbilFotoRumah] = useState(false);
+  let [showModalAmbilFotoDalamRumah ,setShowModalAmbilFotoDalamRumah] = useState(false);
 
-  let [fotoRumah ,setFotoRumah] = useState([
+  let [fotoDalamRumah ,setFotoDalamRumah] = useState([
     {
         uri:""
     },
@@ -152,15 +177,15 @@ export default function SurveyAwalScreen() {
     {
         uri:""
     },
-    {
-        uri:""
-    },
-    {
-        uri:""
-    },
-    {
-        uri:""
-    },
+    // {
+    //     uri:""
+    // },
+    // {
+    //     uri:""
+    // },
+    // {
+    //     uri:""
+    // },
     ]);
 
   let [showModalSuratKepemilikan, setShowModalSuratKepemilikan] = useState(false);
@@ -239,8 +264,123 @@ export default function SurveyAwalScreen() {
   ]);
   let [showSelectKebersihan, setShowSelectKebersihan] = useState(false);
 
+
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+    {
+            (showModalAmbilFotoTampakDepan) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowModalAmbilFotoTampakDepan(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),height:EStyleSheet.value("300rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ambil Foto Tampak Depan</Text>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("20rem"),flex:1,paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <Carousel>
+                            {
+                                fotoTampakDepan.map((item,index)=>{
+                                    return (
+                                        <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                            <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                                {
+                                                    (fotoTampakDepan[index].uri) ?
+                                                    <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:fotoTampakDepan[index].uri}}/>
+                                                    :
+                                                    <TouchableOpacity
+                                                    onPress={async ()=>{
+                                                        let capture = await ImagePicker.launchCameraAsync();
+                                                        if(!capture.cancelled){
+                                                            setFotoTampakDepan((prev)=>{
+                                                                return prev.map((item,i)=>{
+                                                                    if(index===i){
+                                                                        return {
+                                                                            ...item,
+                                                                            uri:capture.uri
+                                                                        }
+                                                                    }
+                                                                    return item;
+                                                                })
+                                                            })
+                                                        }
+                                                        
+                                                    }}
+                                                    >
+                                                        <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                                    </TouchableOpacity>
+                                                }
+                                            </View>
+                                        </View>
+                                    )
+                                })
+                            }
+                        </Carousel>
+                    </View>
+                </View>
+            </View>
+        }
+
+
+        {
+            (showModalAmbilFotoTampakDariJalan) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowModalAmbilFotoTampakDariJalan(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),height:EStyleSheet.value("300rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ambil Foto Tampak Dari Jalan</Text>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("20rem"),flex:1,paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <Carousel>
+                            {
+                                fotoTampakDariJalan.map((item,index)=>{
+                                    return (
+                                        <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                            <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                                {
+                                                    (fotoTampakDariJalan[index].uri) ?
+                                                    <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:fotoTampakDariJalan[index].uri}}/>
+                                                    :
+                                                    <TouchableOpacity
+                                                    onPress={async ()=>{
+                                                        let capture = await ImagePicker.launchCameraAsync();
+                                                        if(!capture.cancelled){
+                                                            setFotoTampakDariJalan((prev)=>{
+                                                                return prev.map((item,i)=>{
+                                                                    if(index===i){
+                                                                        return {
+                                                                            ...item,
+                                                                            uri:capture.uri
+                                                                        }
+                                                                    }
+                                                                    return item;
+                                                                })
+                                                            })
+                                                        }
+                                                        
+                                                    }}
+                                                    >
+                                                        <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                                    </TouchableOpacity>
+                                                }
+                                            </View>
+                                        </View>
+                                    )
+                                })
+                            }
+                        </Carousel>
+                    </View>
+                </View>
+            </View>
+        }
+
 
 {
             (showSelectKebersihan) &&
@@ -697,33 +837,33 @@ export default function SurveyAwalScreen() {
 
 
         {
-              (showModalAmbilFotoRumah) &&
+              (showModalAmbilFotoDalamRumah) &&
               <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
                   <Pressable 
                   onPress={()=>{
-                      setShowModalAmbilFotoRumah(false);
+                      setShowModalAmbilFotoDalamRumah(false);
                   }}
                   style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
                   <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),height:EStyleSheet.value("300rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
                       <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
-                          <Text>Ambil Foto Rumah</Text>
+                          <Text>Ambil Foto Dalam Rumah</Text>
                       </View>
                       <View style={{marginTop:EStyleSheet.value("20rem"),flex:1,paddingHorizontal:EStyleSheet.value("20rem")}}>
                           <Carousel>
                              {
-                                 [1,2,3,4,5,6,7,8].map((item,index)=>{
+                                 [1,2,3,4,5].map((item,index)=>{
                                      return (
                                         <View style={{backgroundColor:"whitesmoke",flex:1}}>
                                                 <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
                                                 {
-                                                    (fotoRumah[index].uri) ?
-                                                    <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:fotoRumah[index].uri}}/>
+                                                    (fotoDalamRumah[index].uri) ?
+                                                    <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:fotoDalamRumah[index].uri}}/>
                                                     :
                                                     <TouchableOpacity
                                                     onPress={async ()=>{
                                                         let capture = await ImagePicker.launchCameraAsync();
                                                         if(!capture.cancelled){
-                                                            setFotoRumah((prev)=>{
+                                                            setFotoDalamRumah((prev)=>{
                                                                 return prev.map((item,i)=>{
                                                                     if(i===index){
                                                                         return {
@@ -1969,6 +2109,52 @@ export default function SurveyAwalScreen() {
                 <TextInput multiline={true} style={{flex:1}} placeholder='Cons'/>
             </View>
         </View> */}
+       
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Foto tampak dari jalan</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity
+                    activeOpacity={0.6} 
+                    onPress={()=>{
+                        setShowModalAmbilFotoTampakDariJalan(true);
+                    }}
+                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                        <Text style={{color:"black"}}>Ambil Foto</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Foto tampak depan</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity
+                    activeOpacity={0.6} 
+                    onPress={()=>{
+                        setShowModalAmbilFotoTampakDepan(true);
+                    }}
+                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                        <Text style={{color:"black"}}>Ambil Foto</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Foto dalam rumah</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity
+                    activeOpacity={0.6} 
+                    onPress={()=>{
+                        setShowModalAmbilFotoDalamRumah(true);
+                    }}
+                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                        <Text style={{color:"black"}}>Ambil Foto</Text>
+                    </TouchableOpacity>
+            </View>
+        </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Google Maps</Text>
@@ -1981,36 +2167,6 @@ export default function SurveyAwalScreen() {
                     }}
                     style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
                         <Text style={{color:"black"}}>Ambil Kordinat</Text>
-                    </TouchableOpacity>
-            </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
-            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
-                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Foto View Jalan</Text>
-            </View>
-            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                    <TouchableOpacity
-                    activeOpacity={0.6} 
-                    onPress={()=>{
-                        setShowModalAmbilViewJalan(true);
-                    }}
-                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
-                        <Text style={{color:"black"}}>Ambil Foto</Text>
-                    </TouchableOpacity>
-            </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
-            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
-                <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Foto Rumah</Text>
-            </View>
-            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                    <TouchableOpacity
-                    activeOpacity={0.6} 
-                    onPress={()=>{
-                        setShowModalAmbilFotoRumah(true);
-                    }}
-                    style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
-                        <Text style={{color:"black"}}>Ambil Foto</Text>
                     </TouchableOpacity>
             </View>
         </View>
