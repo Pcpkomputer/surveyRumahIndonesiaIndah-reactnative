@@ -87,7 +87,7 @@ export default function DashboardScreen(props) {
                         <TouchableOpacity 
                         activeOpacity={0.8}
                         onPress={()=>{
-                            props.navigation.navigate("RiwayatSurvey");
+                            props.navigation.navigate("ListRiwayatSurveyAwal");
                         }}
                         style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1}}>
                            
@@ -102,7 +102,7 @@ export default function DashboardScreen(props) {
                         <TouchableOpacity 
                         activeOpacity={0.8}
                         onPress={()=>{
-                            props.navigation.navigate("SurveyTersimpan");
+                            props.navigation.navigate("ListSurveyAwalTersimpan");
                         }}
                         style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>
                             <SavedSVG

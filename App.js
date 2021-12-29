@@ -7,11 +7,12 @@ import LandingScreen from './screen/LandingScreen';
 import LoginScreen from './screen/LoginScreen';
 import DashboardScreen from './screen/DashboardScreen';
 import SurveyScreen from './screen/SurveyScreen';
-import RiwayatSurveyScreen from './screen/RiwayatSurveyScreen';
+import ListRiwayatSurveyAwalScreen from './screen/ListRiwayatSurveyAwalScreen';
 import DetailRiwayatSurveyScreen from './screen/DetailRiwayatSurveyScreen';
-import SurveyTersimpanScreen from './screen/SurveyTersimpanScreen';
+import ListSurveyAwalTersimpanScreen from './screen/ListSurveyAwalTersimpanScreen';
 
 import SurveyAwalScreen from './screen/SurveyAwalScreen';
+import DetailRiwayatSurveyAwalScreen from './screen/DetailRiwayatSurveyAwalScreen';
 
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
@@ -60,26 +61,31 @@ export default function App() {
            headerShown:false
         }}
         component={SurveyScreen} />
-         <Stack.Screen name="RiwayatSurvey" 
+         <Stack.Screen name="ListRiwayatSurveyAwal" 
         options={{
            headerShown:false
         }}
-        component={RiwayatSurveyScreen} />
+        component={ListRiwayatSurveyAwalScreen} />
         <Stack.Screen name="DetailRiwayatSurvey" 
         options={{
            headerShown:false
         }}
         component={DetailRiwayatSurveyScreen} />
-         <Stack.Screen name="SurveyTersimpan" 
+         <Stack.Screen name="ListSurveyAwalTersimpan" 
         options={{
            headerShown:false
         }}
-        component={SurveyTersimpanScreen} />
+        component={ListSurveyAwalTersimpanScreen} />
          <Stack.Screen name="SurveyAwal" 
         options={{
            headerShown:false
         }}
         component={SurveyAwalScreen} />
+        <Stack.Screen name="DetailRiwayatSurveyAwal" 
+        options={{
+           headerShown:false
+        }}
+        component={DetailRiwayatSurveyAwalScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

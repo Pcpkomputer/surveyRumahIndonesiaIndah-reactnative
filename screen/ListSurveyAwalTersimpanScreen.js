@@ -25,7 +25,7 @@ shadowRadius: 3.84,
 elevation: 5,
 }
 
-export default function RiwayatSurveyScreen(props) {
+export default function ListSurveyAwalTersimpanScreen(props) {
   return (
     <View style={{flex:1,backgroundColor:"#f0f5fb"}}>
         <View style={{height:StatusBarHeight}}></View>
@@ -34,7 +34,7 @@ export default function RiwayatSurveyScreen(props) {
                 <Entypo name="chevron-left" size={24} color="white" />
             </View>
             <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                <Text style={{color:"white",fontFamily:"NunitoBold"}}>Riwayat Survey</Text>
+                <Text style={{color:"white",fontFamily:"NunitoBold"}}>Survey Tersimpan</Text>
             </View>
             <View style={{justifyContent:"center",opacity:0,alignItems:"center"}}>
                 <Text>123</Text>
@@ -50,12 +50,12 @@ export default function RiwayatSurveyScreen(props) {
                      <TouchableOpacity 
                      activeOpacity={0.8}
                      onPress={()=>{
-                         props.navigation.navigate("DetailRiwayatSurvey");
+                         props.navigation.navigate("SurveyAwal",{draft:true});
                      }}
                      style={{backgroundColor:"white",padding:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("5rem"),...shadow,marginHorizontal:EStyleSheet.value("15rem"),marginBottom:EStyleSheet.value("15rem")}}>
                          <View style={{marginBottom:EStyleSheet.value("10rem"),flexDirection:"row",alignItems:"center",borderRadius:EStyleSheet.value("5rem")}}>
-                            <View style={{backgroundColor:"#0cca88",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("5rem")}}>
-                                <Text style={{color:"white"}}>Padang Perwira Yudha</Text>
+                            <View style={{backgroundColor:"#f6a700",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("20rem"),paddingVertical:EStyleSheet.value("5rem")}}>
+                                <Text style={{color:"white"}}>Draft</Text>
                             </View>
                          </View>
                          <Text style={{fontFamily:"NunitoBold",fontSize:EStyleSheet.value("18rem")}}>To do research</Text>

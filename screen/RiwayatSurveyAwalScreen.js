@@ -27,13 +27,7 @@ shadowRadius: 3.84,
 elevation: 5,
 }
 
-export default function SurveyAwalScreen(props) {
-
-  useEffect(()=>{
-    if(props.route.params.draft){
-        alert("Opened From Draft");
-    }
-  },[])
+export default function RiwayatSurveyAwalScreen() {
 
   let [showModalInputKendaraan, setShowModalInputKendaraan] = useState(false);
 

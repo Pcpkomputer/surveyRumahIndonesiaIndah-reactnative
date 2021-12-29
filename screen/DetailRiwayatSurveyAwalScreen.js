@@ -27,13 +27,7 @@ shadowRadius: 3.84,
 elevation: 5,
 }
 
-export default function SurveyAwalScreen(props) {
-
-  useEffect(()=>{
-    if(props.route.params.draft){
-        alert("Opened From Draft");
-    }
-  },[])
+export default function DetailRiwayatSurveyAwalScreen() {
 
   let [showModalInputKendaraan, setShowModalInputKendaraan] = useState(false);
 
@@ -686,7 +680,7 @@ export default function SurveyAwalScreen(props) {
                         {
                             (!pbbSudahLunas) &&
                             <View>
-                                <TextInput placeholder="PBB Terakhir Tahun Kapan"/>
+                                <TextInput editable={false} placeholder="PBB Terakhir Tahun Kapan"/>
                             </View>
                         }
                         <View style={{backgroundColor:"whitesmoke",justifyContent:"center",alignItems:"center",marginTop:EStyleSheet.value("10rem"),height:EStyleSheet.value("250rem")}}>
@@ -997,10 +991,10 @@ export default function SurveyAwalScreen(props) {
                         <Text>Ambil Kordinat GPS</Text>
                     </View>
                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput placeholder="Latitude"/>
+                       <TextInput editable={false} placeholder="Latitude"/>
                     </View>
                     <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput placeholder="Longitude"/>
+                       <TextInput editable={false} placeholder="Longitude"/>
                     </View>
                     <View style={{marginTop:EStyleSheet.value("5rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
                         <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),marginRight:EStyleSheet.value("15rem"),paddingVertical:EStyleSheet.value("10rem")}}>
@@ -1027,10 +1021,10 @@ export default function SurveyAwalScreen(props) {
                         <Text>Isi Nomor & Atas Nama PDAM</Text>
                     </View>
                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput placeholder="Nomor"/>
+                       <TextInput editable={false} placeholder="Nomor"/>
                     </View>
                     <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput placeholder="Atas Nama"/>
+                       <TextInput editable={false} placeholder="Atas Nama"/>
                     </View>
                 </View>
             </View>
@@ -1272,10 +1266,10 @@ export default function SurveyAwalScreen(props) {
                         <Text>Isi Nomor & Tanggal IMB</Text>
                     </View>
                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput placeholder="Nomor"/>
+                       <TextInput editable={false} placeholder="Nomor"/>
                     </View>
                     <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput placeholder="Tanggal"/>
+                       <TextInput editable={false} placeholder="Tanggal"/>
                     </View>
                 </View>
             </View>
@@ -1390,7 +1384,7 @@ export default function SurveyAwalScreen(props) {
                         <Text>Beri Keterangan & Fotocopy Dokumen</Text>
                     </View>
                     <View style={{flex:1,paddingVertical:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                        <TextInput 
+                        <TextInput editable={false} 
                         onChangeText={(text)=>{
                             setSedangDigadaikanKeterangan(text);
                         }}
@@ -1414,7 +1408,7 @@ export default function SurveyAwalScreen(props) {
                     </View>
                     <View style={{paddingHorizontal:EStyleSheet.value("20rem"),borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",paddingVertical:EStyleSheet.value("10rem")}}>
                          <View style={{flex:1}}>
-                             <TextInput 
+                             <TextInput editable={false} 
                              onChangeText={(text)=>{
                                  setTxtNamaKendaraan(text);
                              }}
@@ -1595,7 +1589,7 @@ export default function SurveyAwalScreen(props) {
 
         <View style={{height:StatusBarHeight}}></View>
         <View style={{backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
-            <Text style={{fontSize:EStyleSheet.value("16rem"),color:"#a9adb8"}}>Isikan form survey awal berikut</Text>
+            <Text style={{fontSize:EStyleSheet.value("16rem"),color:"#a9adb8"}}>Berikut adalah hasil riwayat survey</Text>
         </View>
        <ScrollView>
        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -1606,7 +1600,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Nama (Sesuai KTP)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Nama (Sesuai KTP)'/>
+                <TextInput editable={false} editable={false} style={{flex:1}} placeholder='Nama (Sesuai KTP)'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1614,13 +1608,13 @@ export default function SurveyAwalScreen(props) {
                 <Text>Alamat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput placeholder='Line 1'/>
-                <TextInput placeholder='Line 2'/>
-                <TextInput placeholder='RT/RW'/>
-                <TextInput placeholder='Kel/Desa'/>
-                <TextInput placeholder='Kecamatan'/>
-                <TextInput placeholder='Kabupaten/Kota'/>
-                <TextInput placeholder='Provinsi'/>
+                <TextInput editable={false} placeholder='Line 1'/>
+                <TextInput editable={false} placeholder='Line 2'/>
+                <TextInput editable={false} placeholder='RT/RW'/>
+                <TextInput editable={false} placeholder='Kel/Desa'/>
+                <TextInput editable={false} placeholder='Kecamatan'/>
+                <TextInput editable={false} placeholder='Kabupaten/Kota'/>
+                <TextInput editable={false} placeholder='Provinsi'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1666,13 +1660,13 @@ export default function SurveyAwalScreen(props) {
                 <Text>Alamat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput placeholder='Line 1'/>
-                <TextInput placeholder='Line 2'/>
-                <TextInput placeholder='RT/RW'/>
-                <TextInput placeholder='Kel/Desa'/>
-                <TextInput placeholder='Kecamatan'/>
-                <TextInput placeholder='Kabupaten/Kota'/>
-                <TextInput placeholder='Provinsi'/>
+                <TextInput editable={false} placeholder='Line 1'/>
+                <TextInput editable={false} placeholder='Line 2'/>
+                <TextInput editable={false} placeholder='RT/RW'/>
+                <TextInput editable={false} placeholder='Kel/Desa'/>
+                <TextInput editable={false} placeholder='Kecamatan'/>
+                <TextInput editable={false} placeholder='Kabupaten/Kota'/>
+                <TextInput editable={false} placeholder='Provinsi'/>
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -1683,7 +1677,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Luas Tanah (M2)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Luas Tanah'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Luas Tanah'/>
                 <Text style={{marginLeft:EStyleSheet.value("10rem")}}>M2</Text>
             </View>
         </View>
@@ -1692,7 +1686,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Luas Bangunan (M2)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Luas Bangunan'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Luas Bangunan'/>
                 <Text style={{marginLeft:EStyleSheet.value("10rem")}}>M2</Text>
             </View>
         </View>
@@ -1701,7 +1695,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Jumlah KT</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Jumlah KT'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Jumlah KT'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1709,7 +1703,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Jumlah KM</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Jumlah KM'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Jumlah KM'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1720,7 +1714,7 @@ export default function SurveyAwalScreen(props) {
                 <TouchableOpacity 
                 activeOpacity={0.7}
                 onPress={()=>{
-                    setSelectGarasiExist(true);
+                    //setSelectGarasiExist(true);
                 }}
                 style={{flexDirection:"row"}}>
                     <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -1733,7 +1727,7 @@ export default function SurveyAwalScreen(props) {
                    <TouchableOpacity
                    activeOpacity={0.6} 
                    onPress={()=>{
-                       setShowModalInputKendaraan(true);
+                       //setShowModalInputKendaraan(true);
                    }}
                    style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
                        <Text style={{color:"black"}}>Daftar Kendaraan</Text>
@@ -1746,7 +1740,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Surat Tanah Atas Nama</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Surat Tanah Atas Nama'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Surat Tanah Atas Nama'/>
             </View>
         </View> */}
         {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1847,7 +1841,7 @@ export default function SurveyAwalScreen(props) {
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        setShowSelectKapanDibangun(true);
+                        //setShowSelectKapanDibangun(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -1865,7 +1859,7 @@ export default function SurveyAwalScreen(props) {
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        setShowSelectKondisiRumah(true);
+                        //setShowSelectKondisiRumah(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -1883,7 +1877,7 @@ export default function SurveyAwalScreen(props) {
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        setshowSelectKebersihanDanKerapihan(true);
+                        //setshowSelectKebersihanDanKerapihan(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -1901,7 +1895,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>No. ID PLN</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='No. ID PLN'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='No. ID PLN'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1909,7 +1903,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>ID PLN Atas Nama</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='ID PLN Atas Nama'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='ID PLN Atas Nama'/>
             </View>
         </View> */}
          <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1920,7 +1914,7 @@ export default function SurveyAwalScreen(props) {
                 <TouchableOpacity 
                 activeOpacity={0.7}
                 onPress={()=>{
-                   setShowSelectAdaPLN(true);
+                   //setShowSelectAdaPLN(true);
                 }}
                 style={{flexDirection:"row"}}>
                     <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -1949,7 +1943,7 @@ export default function SurveyAwalScreen(props) {
                 <TouchableOpacity 
                 activeOpacity={0.7}
                 onPress={()=>{
-                    setShowSelectAdaPDAM(true);
+                    //setShowSelectAdaPDAM(true);
                 }}
                 style={{flexDirection:"row"}}>
                     <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -1978,7 +1972,7 @@ export default function SurveyAwalScreen(props) {
                 <TouchableOpacity 
                 activeOpacity={0.7}
                 onPress={()=>{
-                    setShowSelectAdaSinyalInternet(true);
+                    //setShowSelectAdaSinyalInternet(true);
                 }}
                 style={{flexDirection:"row"}}>
                     <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2007,7 +2001,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Lingkungan</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Lingkungan'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Lingkungan'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2015,7 +2009,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Riwayat Properti</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='Riwayat Properti'/>
+                <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Riwayat Properti'/>
             </View>
         </View> */}
          <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2026,7 +2020,7 @@ export default function SurveyAwalScreen(props) {
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        setShowSelectJalan(true);
+                        //setShowSelectJalan(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2044,7 +2038,7 @@ export default function SurveyAwalScreen(props) {
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        setShowSelectJalanMasuk(true);
+                        //setShowSelectJalanMasuk(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2059,7 +2053,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Pasar Terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Pasar Terdekat'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Pasar Terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2067,7 +2061,7 @@ export default function SurveyAwalScreen(props) {
                 <Text>Sekolah Terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Sekolah Terdekat'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Sekolah Terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2075,7 +2069,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Stasiun KA/halte bus terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2083,7 +2077,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jarak ke jalur bis/mikrolet terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2091,7 +2085,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jalur Bus/Mikrolet No.</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2099,7 +2093,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Perumahan/Kompleks Perumahan Terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
+                <TextInput editable={false} style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2113,7 +2107,7 @@ export default function SurveyAwalScreen(props) {
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        setShowSelectRawanBanjir(true);
+                        //setShowSelectRawanBanjir(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2131,7 +2125,7 @@ export default function SurveyAwalScreen(props) {
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        setshowSelectKeamanan(true);
+                        //setshowSelectKeamanan(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2149,7 +2143,7 @@ export default function SurveyAwalScreen(props) {
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        setShowSelectKebersihan(true);
+                        //setShowSelectKebersihan(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2167,7 +2161,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Permintaan Penjual</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
+                <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2175,7 +2169,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Pasar</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
+                <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2186,7 +2180,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Pros</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='Pros'/>
+                <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Pros'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2194,7 +2188,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Cons</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='Cons'/>
+                <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Cons'/>
             </View>
         </View> */}
        
@@ -2311,7 +2305,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Nama Penjual</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='Nama Penjual'/>
+                <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Nama Penjual'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2319,7 +2313,7 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>NIK</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='NIK'/>
+                <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='NIK'/>
             </View>
         </View> */}
         {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2357,13 +2351,13 @@ export default function SurveyAwalScreen(props) {
                 <Text>Alamat Sesuai KTP</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput placeholder='Line 1'/>
-                <TextInput placeholder='Line 2'/>
-                <TextInput placeholder='RT/RW'/>
-                <TextInput placeholder='Kel/Desa'/>
-                <TextInput placeholder='Kecamatan'/>
-                <TextInput placeholder='Kabupaten/Kota'/>
-                <TextInput placeholder='Provinsi'/>
+                <TextInput editable={false} placeholder='Line 1'/>
+                <TextInput editable={false} placeholder='Line 2'/>
+                <TextInput editable={false} placeholder='RT/RW'/>
+                <TextInput editable={false} placeholder='Kel/Desa'/>
+                <TextInput editable={false} placeholder='Kecamatan'/>
+                <TextInput editable={false} placeholder='Kabupaten/Kota'/>
+                <TextInput editable={false} placeholder='Provinsi'/>
             </View>
         </View> */}
         {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2371,20 +2365,20 @@ export default function SurveyAwalScreen(props) {
                 <Text>Alamat Domisili</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput placeholder='Sama dengan alamat KTP'/>
-                <TextInput placeholder='Beda dengan alamat KTP'/>
-                <TextInput placeholder='RT/RW'/>
-                <TextInput placeholder='Kel/Desa'/>
-                <TextInput placeholder='Kecamatan'/>
-                <TextInput placeholder='Kabupaten/Kota'/>
-                <TextInput placeholder='Provinsi'/>
+                <TextInput editable={false} placeholder='Sama dengan alamat KTP'/>
+                <TextInput editable={false} placeholder='Beda dengan alamat KTP'/>
+                <TextInput editable={false} placeholder='RT/RW'/>
+                <TextInput editable={false} placeholder='Kel/Desa'/>
+                <TextInput editable={false} placeholder='Kecamatan'/>
+                <TextInput editable={false} placeholder='Kabupaten/Kota'/>
+                <TextInput editable={false} placeholder='Provinsi'/>
             </View>
         </View> */}
-        <View style={{paddingVertical:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+        {/* <View style={{paddingVertical:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
             <View style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
                 <Text>Simpan</Text>
             </View>
-        </View>
+        </View> */}
         </View> 
         }
         {
@@ -2401,13 +2395,13 @@ export default function SurveyAwalScreen(props) {
                         <Text>Alamat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput placeholder='Line 1'/>
-                        <TextInput placeholder='Line 2'/>
-                        <TextInput placeholder='RT/RW'/>
-                        <TextInput placeholder='Kel/Desa'/>
-                        <TextInput placeholder='Kecamatan'/>
-                        <TextInput placeholder='Kabupaten/Kota'/>
-                        <TextInput placeholder='Provinsi'/>
+                        <TextInput editable={false} placeholder='Line 1'/>
+                        <TextInput editable={false} placeholder='Line 2'/>
+                        <TextInput editable={false} placeholder='RT/RW'/>
+                        <TextInput editable={false} placeholder='Kel/Desa'/>
+                        <TextInput editable={false} placeholder='Kecamatan'/>
+                        <TextInput editable={false} placeholder='Kabupaten/Kota'/>
+                        <TextInput editable={false} placeholder='Provinsi'/>
                     </View>
                 </View>
                 <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2421,7 +2415,7 @@ export default function SurveyAwalScreen(props) {
                         <TouchableOpacity 
                         activeOpacity={0.7}
                         onPress={()=>{
-                            setShowSelectBisaAmprahPLN(true);
+                            //setShowSelectBisaAmprahPLN(true);
                         }}
                         style={{flexDirection:"row"}}>
                             <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2439,7 +2433,7 @@ export default function SurveyAwalScreen(props) {
                         <TouchableOpacity 
                         activeOpacity={0.7}
                         onPress={()=>{
-                            setShowSelectBisaAmprahPDAM(true);
+                            //setShowSelectBisaAmprahPDAM(true);
                         }}
                         style={{flexDirection:"row"}}>
                             <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2457,7 +2451,7 @@ export default function SurveyAwalScreen(props) {
                         <TouchableOpacity 
                         activeOpacity={0.7}
                         onPress={()=>{
-                            setShowSelectAdaSinyalInternet(true);
+                            //setShowSelectAdaSinyalInternet(true);
                         }}
                         style={{flexDirection:"row"}}>
                             <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2489,7 +2483,7 @@ export default function SurveyAwalScreen(props) {
                             <TouchableOpacity 
                             activeOpacity={0.7}
                             onPress={()=>{
-                                setShowSelectJalan(true);
+                                //setShowSelectJalan(true);
                             }}
                             style={{flexDirection:"row"}}>
                                 <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2507,7 +2501,7 @@ export default function SurveyAwalScreen(props) {
                             <TouchableOpacity 
                             activeOpacity={0.7}
                             onPress={()=>{
-                                setShowSelectJalanMasuk(true);
+                                //setShowSelectJalanMasuk(true);
                             }}
                             style={{flexDirection:"row"}}>
                                 <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2522,7 +2516,7 @@ export default function SurveyAwalScreen(props) {
                         <Text>Pasar Terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Pasar Terdekat'/>
+                        <TextInput editable={false} style={{flex:1}} placeholder='Pasar Terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2530,7 +2524,7 @@ export default function SurveyAwalScreen(props) {
                         <Text>Sekolah Terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Sekolah Terdekat'/>
+                        <TextInput editable={false} style={{flex:1}} placeholder='Sekolah Terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2538,7 +2532,7 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Stasiun KA/halte bus terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
+                        <TextInput editable={false} style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2546,7 +2540,7 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jarak ke jalur bis/mikrolet terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
+                        <TextInput editable={false} style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2554,7 +2548,7 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jalur Bus/Mikrolet No.</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
+                        <TextInput editable={false} style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2562,7 +2556,7 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Perumahan/Kompleks Perumahan Terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
+                        <TextInput editable={false} style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
                     </View>
                 </View>
                 <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2576,7 +2570,7 @@ export default function SurveyAwalScreen(props) {
                             <TouchableOpacity 
                             activeOpacity={0.7}
                             onPress={()=>{
-                                setShowSelectRawanBanjir(true);
+                                //setShowSelectRawanBanjir(true);
                             }}
                             style={{flexDirection:"row"}}>
                                 <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2594,7 +2588,7 @@ export default function SurveyAwalScreen(props) {
                             <TouchableOpacity 
                             activeOpacity={0.7}
                             onPress={()=>{
-                                setshowSelectKeamanan(true);
+                                //setshowSelectKeamanan(true);
                             }}
                             style={{flexDirection:"row"}}>
                                 <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2612,7 +2606,7 @@ export default function SurveyAwalScreen(props) {
                             <TouchableOpacity 
                             activeOpacity={0.7}
                             onPress={()=>{
-                                setShowSelectKebersihan(true);
+                                //setShowSelectKebersihan(true);
                             }}
                             style={{flexDirection:"row"}}>
                                 <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
@@ -2630,7 +2624,7 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Permintaan Penjual</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
+                        <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2638,14 +2632,14 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Pasar</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
+                        <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
                     </View>
                 </View>
-                <View style={{paddingVertical:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                {/* <View style={{paddingVertical:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
                     <View style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
                         <Text>Simpan</Text>
                     </View>
-                </View>
+                </View> */}
             </View>
         }
        </ScrollView>
