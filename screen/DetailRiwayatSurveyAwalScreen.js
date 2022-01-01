@@ -1625,7 +1625,7 @@ export default function DetailRiwayatSurveyAwalScreen() {
                     <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={()=>{
-                        setShowSelectObjek(true);
+                        //setShowSelectObjek(true);
                     }}
                     style={{flexDirection:"row"}}>
                         <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>

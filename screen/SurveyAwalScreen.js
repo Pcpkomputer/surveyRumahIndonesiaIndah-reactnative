@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{useState, useRef, useEffect} from 'react';
-import { StyleSheet, Text, View,Dimensions, Pressable,TextInput, TouchableOpacity, ScrollView, ToastAndroid,Image } from 'react-native';
+import { StyleSheet, Text, Platform, Linking, View,Dimensions, Pressable,TextInput, TouchableOpacity, ScrollView, ToastAndroid,Image } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { StatusBarHeight } from '../utils/heightUtils';
@@ -14,6 +14,8 @@ import LandingSVG from '../svg/LandingSVG';
 
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
+
+import * as Location from 'expo-location';
 
 let shadow = {
     shadowColor: "#000",
@@ -29,8 +31,61 @@ elevation: 5,
 
 export default function SurveyAwalScreen(props) {
 
+
+  let [informasiPenjual, setInformasiPenjual] = useState({
+      nama:"",
+      alamat:{
+          line1:"",
+          line2:"",
+          rtrw:"",
+          keldesa:"",
+          kecamatan:"",
+          kabupatenkota:"",
+          provinsi:""
+      }
+  });
+
+  let [alamatObjek, setAlamatObjek] = useState({
+    line1:"",
+    line2:"",
+    rtrw:"",
+    keldesa:"",
+    kecamatan:"",
+    kabupatenkota:"",
+    provinsi:""
+  })
+
+  let [arsitekturRumah, setArsitekturRumah] = useState({
+      luastanah:"",
+      luasbangunan:"",
+      jumlahKT:"",
+      jumlahKM:""
+  });
+
+  let [aksesbilitas, setAksesbilitas] = useState({
+      pasarterdekat:"",
+      sekolahterdekat:"",
+      stasiunkaterdekat:"",
+      jarakkejalurbis:"",
+      jalurbus:"",
+      perumahanterdekat:""
+  });
+
+  let [harga, setHarga] = useState({
+      permintaanpenjual:"",
+      hargapasar:""
+  });
+
+  let [location,setLocation] = useState({
+      coords:{
+          latitude:"",
+          longitude:""
+      }
+  })
+
+
   useEffect(()=>{
-    if(props.route.params.draft){
+    if(props.route?.params?.draft){
         alert("Opened From Draft");
     }
   },[])
@@ -997,18 +1052,63 @@ export default function SurveyAwalScreen(props) {
                         <Text>Ambil Kordinat GPS</Text>
                     </View>
                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput placeholder="Latitude"/>
+                       <TextInput 
+                       value={location.coords.latitude.toString()}
+                       placeholder="Latitude"/>
                     </View>
                     <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput placeholder="Longitude"/>
+                       <TextInput 
+                       value={location.coords.longitude.toString()}
+                       placeholder="Longitude"/>
                     </View>
                     <View style={{marginTop:EStyleSheet.value("5rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
-                        <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),marginRight:EStyleSheet.value("15rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                        <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={async ()=>{
+                            let { status } = await Location.requestForegroundPermissionsAsync();
+                            if (status !== 'granted') {
+                              alert('Permission to access location was denied');
+                            }
+                            else{
+                                let enabled = await Location.hasServicesEnabledAsync();
+                                if(enabled){
+                                    let provider = await Location.enableNetworkProviderAsync();
+                                     let location = await Location.getCurrentPositionAsync({});
+    
+                                    // let l = await Location.reverseGeocodeAsync({
+                                    //     latitude:location.coords.latitude,
+                                    //      longitude:location.coords.longitude
+                                    // });
+                                    setLocation(location);
+                                }   
+                                else{
+                                    alert("Not supported service");
+                                }
+                                
+    
+                               
+                            }   
+                        }}
+                        style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),marginRight:EStyleSheet.value("15rem"),paddingVertical:EStyleSheet.value("10rem")}}>
                             <Text>Ambil Kordinat</Text>
-                        </View>
-                        <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={()=>{
+                            const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+                            const latLng = `${location.coords.latitude},${location.coords.longitude}`;
+                            const label = 'Cek Google Map';
+                            const url = Platform.select({
+                            ios: `${scheme}${label}@${latLng}`,
+                            android: `${scheme}${latLng}(${label})`
+                            });
+
+                                
+                            Linking.openURL(url);
+                        }}  
+                        style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("10rem")}}>
                             <Text>Cek Google Map</Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -1606,7 +1706,17 @@ export default function SurveyAwalScreen(props) {
                 <Text>Nama (Sesuai KTP)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Nama (Sesuai KTP)'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            nama:text
+                        }
+                    })
+                }}
+                value={informasiPenjual.nama}
+                style={{flex:1}} placeholder='Nama (Sesuai KTP)'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1614,13 +1724,104 @@ export default function SurveyAwalScreen(props) {
                 <Text>Alamat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput placeholder='Line 1'/>
-                <TextInput placeholder='Line 2'/>
-                <TextInput placeholder='RT/RW'/>
-                <TextInput placeholder='Kel/Desa'/>
-                <TextInput placeholder='Kecamatan'/>
-                <TextInput placeholder='Kabupaten/Kota'/>
-                <TextInput placeholder='Provinsi'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                line1:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.line1}
+                placeholder='Line 1'/>
+                <TextInput 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                line2:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.line2}
+                placeholder='Line 2'/>
+                <TextInput 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                rtrw:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.rtrw}
+                placeholder='RT/RW'/>
+                <TextInput 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                keldesa:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.keldesa}
+                placeholder='Kel/Desa'/>
+                <TextInput 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                kecamatan:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.kecamatan}
+                placeholder='Kecamatan'/>
+                <TextInput 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                kabupatenkota:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.kabupatenkota}
+                placeholder='Kabupaten/Kota'/>
+                <TextInput 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                provinsi:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.provinsi}
+                placeholder='Provinsi'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1666,13 +1867,83 @@ export default function SurveyAwalScreen(props) {
                 <Text>Alamat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput placeholder='Line 1'/>
-                <TextInput placeholder='Line 2'/>
-                <TextInput placeholder='RT/RW'/>
-                <TextInput placeholder='Kel/Desa'/>
-                <TextInput placeholder='Kecamatan'/>
-                <TextInput placeholder='Kabupaten/Kota'/>
-                <TextInput placeholder='Provinsi'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            line1:text
+                        }
+                    })
+                }}
+                value={alamatObjek.line1}
+                placeholder='Line 1'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            line2:text
+                        }
+                    })
+                }}
+                value={alamatObjek.line2}
+                placeholder='Line 2'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            rtrw:text
+                        }
+                    })
+                }}
+                value={alamatObjek.rtrw}
+                placeholder='RT/RW'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            keldesa:text
+                        }
+                    })
+                }}
+                value={alamatObjek.keldesa}
+                placeholder='Kel/Desa'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            kecamatan:text
+                        }
+                    })
+                }}
+                value={alamatObjek.kecamatan}
+                placeholder='Kecamatan'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            kabupatenkota:text
+                        }
+                    })
+                }}
+                value={alamatObjek.kabupatenkota}
+                placeholder='Kabupaten/Kota'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            provinsi:text
+                        }
+                    })
+                }}
+                value={alamatObjek.provinsi}
+                placeholder='Provinsi'/>
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -1683,7 +1954,17 @@ export default function SurveyAwalScreen(props) {
                 <Text>Luas Tanah (M2)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Luas Tanah'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setArsitekturRumah((prev)=>{
+                        return {
+                            ...prev,
+                            luastanah:text
+                        }
+                    })
+                }}
+                value={arsitekturRumah.luastanah}
+                style={{flex:1}} placeholder='Luas Tanah'/>
                 <Text style={{marginLeft:EStyleSheet.value("10rem")}}>M2</Text>
             </View>
         </View>
@@ -1692,7 +1973,17 @@ export default function SurveyAwalScreen(props) {
                 <Text>Luas Bangunan (M2)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Luas Bangunan'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setArsitekturRumah((prev)=>{
+                        return {
+                            ...prev,
+                            luasbangunan:text
+                        }
+                    })
+                }}
+                value={arsitekturRumah.luasbangunan}
+                style={{flex:1}} placeholder='Luas Bangunan'/>
                 <Text style={{marginLeft:EStyleSheet.value("10rem")}}>M2</Text>
             </View>
         </View>
@@ -1701,7 +1992,17 @@ export default function SurveyAwalScreen(props) {
                 <Text>Jumlah KT</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Jumlah KT'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setArsitekturRumah((prev)=>{
+                        return {
+                            ...prev,
+                            jumlahKT:text
+                        }
+                    })
+                }}
+                value={arsitekturRumah.jumlahKT}
+                style={{flex:1}} placeholder='Jumlah KT'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1709,7 +2010,17 @@ export default function SurveyAwalScreen(props) {
                 <Text>Jumlah KM</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Jumlah KM'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setArsitekturRumah((prev)=>{
+                        return {
+                            ...prev,
+                            jumlahKM:text
+                        }
+                    })
+                }}
+                value={arsitekturRumah.jumlahKM}
+                style={{flex:1}} placeholder='Jumlah KM'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2000,7 +2311,7 @@ export default function SurveyAwalScreen(props) {
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
-            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>E. Aksesbilitaas</Text>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>E. Aksesbilitas</Text>
         </View>
         {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
@@ -2059,7 +2370,17 @@ export default function SurveyAwalScreen(props) {
                 <Text>Pasar Terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Pasar Terdekat'/>
+                <TextInput 
+                onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            pasarterdekat:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.pasarterdekat}
+                style={{flex:1}} placeholder='Pasar Terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2067,7 +2388,17 @@ export default function SurveyAwalScreen(props) {
                 <Text>Sekolah Terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Sekolah Terdekat'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            sekolahterdekat:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.sekolahterdekat}
+                style={{flex:1}} placeholder='Sekolah Terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2075,7 +2406,17 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Stasiun KA/halte bus terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            stasiunkaterdekat:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.stasiunkaterdekat}
+                style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2083,7 +2424,17 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jarak ke jalur bis/mikrolet terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            jarakkejalurbis:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.jarakkejalurbis}
+                style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2091,7 +2442,17 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jalur Bus/Mikrolet No.</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            jalurbus:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.jalurbus}
+                style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2099,7 +2460,17 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Perumahan/Kompleks Perumahan Terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            perumahanterdekat:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.perumahanterdekat}
+                style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2167,7 +2538,17 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Permintaan Penjual</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setHarga((prev)=>{
+                        return {
+                            ...prev,
+                            permintaanpenjual:text
+                        }
+                    })
+                }}
+                value={harga.permintaanpenjual}
+                multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2175,7 +2556,17 @@ export default function SurveyAwalScreen(props) {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Pasar</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
+                <TextInput 
+                 onChangeText={(text)=>{
+                    setHarga((prev)=>{
+                        return {
+                            ...prev,
+                            hargapasar:text
+                        }
+                    })
+                }}
+                value={harga.hargapasar}
+                multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2250,8 +2641,32 @@ export default function SurveyAwalScreen(props) {
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                     <TouchableOpacity
                     activeOpacity={0.6} 
-                    onPress={()=>{
-                        setShowModalAmbilKordinat(true);
+                    onPress={async()=>{
+                        let { status } = await Location.requestForegroundPermissionsAsync();
+                        if (status !== 'granted') {
+                          alert('Permission to access location was denied');
+                        }
+                        else{
+                            let enabled = await Location.hasServicesEnabledAsync();
+                            if(enabled){
+                                let provider = await Location.enableNetworkProviderAsync();
+                                 let location = await Location.getCurrentPositionAsync({});
+
+                                // let l = await Location.reverseGeocodeAsync({
+                                //     latitude:location.coords.latitude,
+                                //      longitude:location.coords.longitude
+                                // });
+                                setLocation(location);
+                                setShowModalAmbilKordinat(true);
+                            }   
+                            else{
+                                alert("Not supported service");
+                            }
+                            
+
+                           
+                        }   
+                        
                     }}
                     style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
                         <Text style={{color:"black"}}>Ambil Kordinat</Text>
@@ -2381,9 +2796,84 @@ export default function SurveyAwalScreen(props) {
             </View>
         </View> */}
         <View style={{paddingVertical:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-            <View style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
+            <Pressable 
+            android_ripple={{
+                color:"white"
+            }}
+            onPress={()=>{
+                let payload = {};
+
+                payload.informasipenjual = informasiPenjual;
+                payload.alamatobjek = alamatObjek;
+                payload.arsitekturrumah = {
+                    ...arsitekturRumah,
+                    garasi:{
+                        garasi,
+                        daftarkendaraan:daftarKendaraan
+                    }
+                };
+                payload.keadaanrumah = {
+                    kapankirakiradibangun:kapandibangun,
+                    butuhperbaikan:kondisirumah,
+                    kebersihandankerapihan:kebersihandankerapihan
+                }
+
+                payload.fasilitas = {
+                    tersambungPLN:adaPLN,
+                    tersambungPDAM:adaPDAM,
+                    adasinyalinternet:adasinyalinternet
+                };
+
+                payload.aksesbilitas = {
+                    ...aksesbilitas,
+                    jalan:jalan,
+                    jalanmasuk:jalanmasuk
+                };
+                
+                payload.suasanalingkungan = {
+                    rawanbanjir:rawanbanjir,
+                    keamanan:keamanan,
+                    kebersihan:kebersihan
+                };
+
+                payload.harga = {
+                    ...harga
+                };
+
+                payload.googlemaps = {
+                    ...location
+                };
+
+                let fototampakdarijalan = fotoTampakDariJalan.map((item,index)=>{
+                    return {
+                        uri: item.uri,
+                        type: 'image/jpeg',
+                        name: `fototampakdarijalan-${index}.jpg`,
+                    };
+                })
+
+                let fototampakdepan = fotoTampakDepan.map((item,index)=>{
+                    return {
+                        uri: item.uri,
+                        type: 'image/jpeg',
+                        name: `fototampakdepan-${index}.jpg`,
+                    };
+                });
+
+                let fotodalamrumah = fotoDalamRumah.map((item,index)=>{
+                    return {
+                        uri: item.uri,
+                        type: 'image/jpeg',
+                        name: `fotodalamrumah-${index}.jpg`,
+                    };
+                });
+
+                console.log(payload);
+
+            }}
+            style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
                 <Text>Simpan</Text>
-            </View>
+            </Pressable>
         </View>
         </View> 
         }
@@ -2401,13 +2891,83 @@ export default function SurveyAwalScreen(props) {
                         <Text>Alamat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput placeholder='Line 1'/>
-                        <TextInput placeholder='Line 2'/>
-                        <TextInput placeholder='RT/RW'/>
-                        <TextInput placeholder='Kel/Desa'/>
-                        <TextInput placeholder='Kecamatan'/>
-                        <TextInput placeholder='Kabupaten/Kota'/>
-                        <TextInput placeholder='Provinsi'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    line1:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.line1}
+                        placeholder='Line 1'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    line2:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.line2}
+                        placeholder='Line 2'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    rtrw:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.rtrw}
+                        placeholder='RT/RW'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    keldesa:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.keldesa}
+                        placeholder='Kel/Desa'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    kecamatan:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.kecamatan}
+                        placeholder='Kecamatan'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    kabupatenkota:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.kabupatenkota}
+                        placeholder='Kabupaten/Kota'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    provinsi:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.provinsi}
+                        placeholder='Provinsi'/>
                     </View>
                 </View>
                 <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2479,7 +3039,7 @@ export default function SurveyAwalScreen(props) {
                     </View>
                 </View>
                 <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
-                    <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>C. Aksesbilitaas</Text>
+                    <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>C. Aksesbilitas</Text>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
                     <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
@@ -2522,7 +3082,17 @@ export default function SurveyAwalScreen(props) {
                         <Text>Pasar Terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Pasar Terdekat'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    pasarterdekat:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.pasarterdekat}
+                        style={{flex:1}} placeholder='Pasar Terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2530,7 +3100,17 @@ export default function SurveyAwalScreen(props) {
                         <Text>Sekolah Terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Sekolah Terdekat'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    sekolahterdekat:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.sekolahterdekat}
+                        style={{flex:1}} placeholder='Sekolah Terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2538,7 +3118,17 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Stasiun KA/halte bus terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    stasiunkaterdekat:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.stasiunkaterdekat}
+                        style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2546,7 +3136,17 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jarak ke jalur bis/mikrolet terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    jarakkejalurbis:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.jarakkejalurbis}
+                        style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2554,7 +3154,17 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jalur Bus/Mikrolet No.</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    jalurbus:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.jalurbus}
+                        style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2562,7 +3172,17 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Perumahan/Kompleks Perumahan Terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    perumahanterdekat:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.perumahanterdekat}
+                        style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
                     </View>
                 </View>
                 <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2630,7 +3250,17 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Permintaan Penjual</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setHarga((prev)=>{
+                                return {
+                                    ...prev,
+                                    permintaanpenjual:text
+                                }
+                            })
+                        }}
+                        value={harga.permintaanpenjual}
+                        multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2638,13 +3268,54 @@ export default function SurveyAwalScreen(props) {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Pasar</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
+                        <TextInput 
+                        onChangeText={(text)=>{
+                            setHarga((prev)=>{
+                                return {
+                                    ...prev,
+                                    hargapasar:text
+                                }
+                            })
+                        }}
+                        value={harga.hargapasar}
+                        multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
                     </View>
                 </View>
                 <View style={{paddingVertical:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                    <View style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
+                    <Pressable 
+                    onPress={()=>{
+                        let payload = {};
+
+                        payload.informasipenjual = informasiPenjual;
+                        payload.alamatobjek = alamatObjek;
+                        payload.fasilitas = {
+                            bisaamprahPLN:bisaAmprahPLN,
+                            bisaamprahPDAM:bisaAmprahPDAM,
+                            adasinyalinternet:adasinyalinternet
+                        };
+                        payload.aksesbilitas = {
+                            ...aksesbilitas,
+                            jalan:jalan,
+                            jalanmasuk:jalanmasuk
+                        };
+                        payload.suasanalingkungan = {
+                            rawanbanjir:rawanbanjir,
+                            keamanan:keamanan,
+                            kebersihan:kebersihan
+                        };
+        
+                        payload.harga = {
+                            ...harga
+                        };
+
+                        console.log(payload);
+                    }}
+                    android_ripple={{
+                        color:"white"
+                    }}
+                    style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
                         <Text>Simpan</Text>
-                    </View>
+                    </Pressable>
                 </View>
             </View>
         }
