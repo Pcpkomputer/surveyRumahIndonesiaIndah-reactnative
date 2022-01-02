@@ -180,8 +180,284 @@ export default function SurveyLanjutanScreen() {
 
  let [lampiranPBB, setLampiranPBB] = useState("");
 
+ let [showSelectAlamatKTPAsliDomisili, setShowSelectAlamatKTPAsliDomisili] = useState(false);
+ let [alamatktpdomisili, setAlamatKtpDomisili]  = useState("Ya");
+
+ let [lampiranKTP, setLampiranKTP] = useState({
+    fcktp:"",
+    fcktpdomisili:""
+ });
+ let [showModalLampiranKTP, setShowModalLampiranKTP] = useState(false);
+
+ let [namasurattanahnamapenjual, setnamasurattanahnamapenjual] = useState("Ya");
+ let [showSelectNamaSuratTanah, setshowSelectNamaSuratTanah] = useState(false);
+ let [showDetailNamaSuratTanah, setShowDetailNamaSuratTanah] = useState(false);
+
+ let [lampiranNamaSuratTanah, setLampiranNamaSuratTanah] = useState({
+     fcsurattanah:"",
+     fcktppemilik:"",
+     fckartukeluarga:""
+ })
+
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+        {
+            (showDetailNamaSuratTanah) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowDetailNamaSuratTanah(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),height:EStyleSheet.value("380rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Detail Nama Surat Tanah</Text>
+                    </View>
+                   <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Nama Dalam Surat Tanah"/>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("0rem"),flex:1,paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <Carousel>
+                            <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                 <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                    {
+                                        (lampiranNamaSuratTanah.fcsurattanah) ?
+                                        <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:lampiranNamaSuratTanah.fcsurattanah}}/>
+                                        :
+                                        <TouchableOpacity
+                                        style={{justifyContent:"center",alignItems:"center"}}
+                                        onPress={async ()=>{
+                                            let capture = await ImagePicker.launchCameraAsync();
+                                            if(!capture.cancelled){
+                                                setLampiranKTP((prev)=>{
+                                                    return {
+                                                        ...prev,
+                                                        fcsurattanah:capture.uri
+                                                    }
+                                                })
+                                            }
+                                            
+                                        }}
+                                        >
+                                            <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                            <Text>FC Surat Tanah</Text>
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                            <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                {
+                                        (lampiranNamaSuratTanah.fcktppemilik) ?
+                                        <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:lampiranNamaSuratTanah.fcktppemilik}}/>
+                                        :
+                                        <TouchableOpacity
+                                        style={{justifyContent:"center",alignItems:"center"}}
+                                        onPress={async ()=>{
+                                            let capture = await ImagePicker.launchCameraAsync();
+                                            if(!capture.cancelled){
+                                                setLampiranKTP((prev)=>{
+                                                    return {
+                                                        ...prev,
+                                                        fcktppemilik:capture.uri
+                                                    }
+                                                })
+                                            }
+                                            
+                                        }}
+                                        >
+                                            <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                            <Text>FC KTP Pemilik</Text>
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                            <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                {
+                                        (lampiranNamaSuratTanah.fckartukeluarga) ?
+                                        <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:lampiranNamaSuratTanah.fckartukeluarga}}/>
+                                        :
+                                        <TouchableOpacity
+                                        style={{justifyContent:"center",alignItems:"center"}}
+                                        onPress={async ()=>{
+                                            let capture = await ImagePicker.launchCameraAsync();
+                                            if(!capture.cancelled){
+                                                setLampiranKTP((prev)=>{
+                                                    return {
+                                                        ...prev,
+                                                        fckartukeluarga:capture.uri
+                                                    }
+                                                })
+                                            }
+                                            
+                                        }}
+                                        >
+                                            <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                            <Text>FC Kartu Keluarga</Text>
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                        </Carousel>
+                    </View>
+                </View>
+            </View>
+        }
+
+        {
+            (showSelectNamaSuratTanah) &&
+              
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setshowSelectNamaSuratTanah(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Nama Dalam Surat Tanah (Nama Penjual)</Text>
+                    </View>
+                    <Pressable 
+                    onPress={()=>{
+                        setnamasurattanahnamapenjual("Ya");
+                        setshowSelectNamaSuratTanah(false);
+                    }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ya</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={()=>{
+                            setnamasurattanahnamapenjual("Tidak");
+                            setshowSelectNamaSuratTanah(false);
+                        }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Tidak</Text>
+                    </Pressable>
+                </View>
+            </View>
+        }
+
+        {
+            (showModalLampiranKTP) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowModalLampiranKTP(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("20rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),height:EStyleSheet.value("300rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Lampiran KTP</Text>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("20rem"),flex:1,paddingHorizontal:EStyleSheet.value("20rem")}}>
+                        <Carousel>
+                            <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                 <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                    {
+                                        (lampiranKTP.fcktp) ?
+                                        <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:lampiranKTP.fcktp}}/>
+                                        :
+                                        <TouchableOpacity
+                                        style={{justifyContent:"center",alignItems:"center"}}
+                                        onPress={async ()=>{
+                                            let capture = await ImagePicker.launchCameraAsync();
+                                            if(!capture.cancelled){
+                                                setLampiranKTP((prev)=>{
+                                                    return {
+                                                        ...prev,
+                                                        fcktp:capture.uri
+                                                    }
+                                                })
+                                            }
+                                            
+                                        }}
+                                        >
+                                            <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                            <Text>FC KTP</Text>
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                            <View style={{backgroundColor:"whitesmoke",flex:1}}>
+                                <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                {
+                                        (lampiranKTP.fcktpdomisili) ?
+                                        <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:lampiranKTP.fcktpdomisili}}/>
+                                        :
+                                        <TouchableOpacity
+                                        style={{justifyContent:"center",alignItems:"center"}}
+                                        onPress={async ()=>{
+                                            let capture = await ImagePicker.launchCameraAsync();
+                                            if(!capture.cancelled){
+                                                setLampiranKTP((prev)=>{
+                                                    return {
+                                                        ...prev,
+                                                        fcktpdomisili:capture.uri
+                                                    }
+                                                })
+                                            }
+                                            
+                                        }}
+                                        >
+                                            <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                            <Text>FC KTP Domisili</Text>
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
+                        </Carousel>
+                    </View>
+                </View>
+            </View>
+        }
+
+
+        {
+            (showSelectAlamatKTPAsliDomisili) &&
+              
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectAlamatKTPAsliDomisili(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Alamat KTP (Alamat Domisili)</Text>
+                    </View>
+                    <Pressable 
+                    onPress={()=>{
+                        setAlamatKtpDomisili("Ya");
+                        setShowSelectAlamatKTPAsliDomisili(false);
+                    }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ya</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={()=>{
+                            setAlamatKtpDomisili("Tidak");
+                            setShowSelectAlamatKTPAsliDomisili(false);
+                        }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Tidak</Text>
+                    </Pressable>
+                </View>
+            </View>
+        }
 
         {
             (showModalDetailPBB) &&
@@ -769,7 +1045,7 @@ export default function SurveyLanjutanScreen() {
                 style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
                 <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
                     <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
-                        <Text>Beri Keterangan & Fotocopy Dokumen</Text>
+                        <Text>Beri Keterangan</Text>
                     </View>
                     <View style={{flex:1,paddingVertical:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
                         <TextInput 
@@ -1000,6 +1276,121 @@ export default function SurveyLanjutanScreen() {
                 <TextInput placeholder='Provinsi'/>
             </View>
         </View> */}
+         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Alamat KTP (Alamat Domisili)</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setShowSelectAlamatKTPAsliDomisili(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{alamatktpdomisili}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                   activeOpacity={0.6} 
+                   onPress={()=>{
+                       setShowModalLampiranKTP(true);
+                   }}
+                   style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                       <Text style={{color:"black"}}>Lampiran</Text>
+                   </TouchableOpacity>
+            </View>
+            
+        </View>
+        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>Tentang Objek Jual</Text>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Nama Dalam Surat Tanah (Nama Penjual)</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                            setshowSelectNamaSuratTanah(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{namasurattanahnamapenjual}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                   activeOpacity={0.6} 
+                   onPress={()=>{
+                       setShowDetailNamaSuratTanah(true);
+                   }}
+                   style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                       <Text style={{color:"black"}}>Detail</Text>
+                   </TouchableOpacity>
+            </View>
+            
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Jenis Surat Tanah</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setSelectJenisSuratTanah(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{jenisSuratTanah}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Surat Tanah Sedang digadaikan/diberatkan?</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setSelectSedangDigadaikan(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{sedangDigadaikan}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+                    {/* {
+                        (sedangDigadaikan==="Tidak") &&
+                        <TouchableOpacity
+                        activeOpacity={0.6} 
+                        onPress={()=>{
+                            setShowTidakSedangDigadaikan(true);
+                        }}
+                        style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                            <Text style={{color:"black"}}>Foto Dokumen Asli</Text>
+                        </TouchableOpacity>
+                    } */}
+                     {
+                        (sedangDigadaikan==="Ya") &&
+                        <TouchableOpacity
+                        activeOpacity={0.6} 
+                        onPress={()=>{
+                            setShowSedangDigadaikan(true);
+                        }}
+                        style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                            <Text style={{color:"black"}}>Beri Keterangan</Text>
+                        </TouchableOpacity>
+                    }
+            </View>
+        </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Luas Tanah (M2)</Text>
@@ -1071,64 +1462,7 @@ export default function SurveyLanjutanScreen() {
                 <TextInput style={{flex:1}} placeholder='Surat Tanah Atas Nama'/>
             </View>
         </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
-            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
-                <Text>Jenis Surat Tanah</Text>
-            </View>
-            <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                    <TouchableOpacity 
-                    activeOpacity={0.7}
-                    onPress={()=>{
-                        setSelectJenisSuratTanah(true);
-                    }}
-                    style={{flexDirection:"row"}}>
-                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
-                            <Text>{jenisSuratTanah}</Text>
-                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
-                        </View>
-                    </TouchableOpacity>
-            </View>
-        </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
-            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
-                <Text>Sedang digadaikan/diberatkan?</Text>
-            </View>
-            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                    <TouchableOpacity 
-                    activeOpacity={0.7}
-                    onPress={()=>{
-                        setSelectSedangDigadaikan(true);
-                    }}
-                    style={{flexDirection:"row"}}>
-                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
-                            <Text>{sedangDigadaikan}</Text>
-                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
-                        </View>
-                    </TouchableOpacity>
-                    {
-                        (sedangDigadaikan==="Tidak") &&
-                        <TouchableOpacity
-                        activeOpacity={0.6} 
-                        onPress={()=>{
-                            setShowTidakSedangDigadaikan(true);
-                        }}
-                        style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
-                            <Text style={{color:"black"}}>Foto Dokumen Asli</Text>
-                        </TouchableOpacity>
-                    }
-                     {
-                        (sedangDigadaikan==="Ya") &&
-                        <TouchableOpacity
-                        activeOpacity={0.6} 
-                        onPress={()=>{
-                            setShowSedangDigadaikan(true);
-                        }}
-                        style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
-                            <Text style={{color:"black"}}>Beri Keterangan & FC</Text>
-                        </TouchableOpacity>
-                    }
-            </View>
-        </View>
+        
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Ada IMB</Text>
