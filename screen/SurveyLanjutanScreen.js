@@ -197,10 +197,52 @@ export default function SurveyLanjutanScreen() {
      fcsurattanah:"",
      fcktppemilik:"",
      fckartukeluarga:""
- })
+ });
+
+ let [bisamenunjukkansurattanahasli, setBisaMenunjukkanSuratTanahAsli] = useState("Ya");
+ let [showSelectBisaMenunjukkanSuratTanahAsli, setShowSelectBisaMenunjukkanSuratTanahAsli] = useState(false);
 
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+        {
+            (showSelectBisaMenunjukkanSuratTanahAsli) &&
+              
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setShowSelectBisaMenunjukkanSuratTanahAsli(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),height:EStyleSheet.value("150rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Nama Dalam Surat Tanah (Nama Penjual)</Text>
+                    </View>
+                    <Pressable 
+                    onPress={()=>{
+                        setBisaMenunjukkanSuratTanahAsli("Ya");
+                        setShowSelectBisaMenunjukkanSuratTanahAsli(false);
+                    }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Ya</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={()=>{
+                            setBisaMenunjukkanSuratTanahAsli("Tidak");
+                             setShowSelectBisaMenunjukkanSuratTanahAsli(false);
+                        }}
+                    android_ripple={{
+                        color:"#e8e8e8"
+                    }}
+                    style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <Text>Tidak</Text>
+                    </Pressable>
+                </View>
+            </View>
+        }
 
         {
             (showDetailNamaSuratTanah) &&
@@ -471,7 +513,10 @@ export default function SurveyLanjutanScreen() {
                     <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
                         <Text>Detail PBB</Text>
                     </View>
-                    <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginTop:EStyleSheet.value("10rem"),flexDirection:"row"}}>
+                    <View style={{paddingVertical:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Atas Nama"/>
+                    </View>
+                    <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginTop:EStyleSheet.value("0rem"),flexDirection:"row"}}>
                          <View style={{flex:1,flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
                              <Text>Sudah Lunas</Text>
                             <Checkbox
@@ -495,7 +540,7 @@ export default function SurveyLanjutanScreen() {
                     </View>
                     <View style={{paddingHorizontal:EStyleSheet.value("20rem"),marginTop:EStyleSheet.value("10rem")}}>
                         {
-                            (!pbbSudahLunas) &&
+                            (true) &&
                             <View>
                                 <TextInput placeholder="PBB Terakhir Tahun Kapan"/>
                             </View>
@@ -506,6 +551,7 @@ export default function SurveyLanjutanScreen() {
                                    <Image resizeMode="contain" source={{uri:lampiranPBB}} style={{width:"100%",height:"100%"}}></Image>
                                    :
                                    <TouchableOpacity
+                                   style={{justifyContent:"center",alignItems:"center"}}
                                    onPress={async ()=>{
                                        let capture = await ImagePicker.launchCameraAsync();
                                        if(!capture.cancelled){
@@ -515,6 +561,7 @@ export default function SurveyLanjutanScreen() {
                                    }}
                                    >
                                        <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                       <Text style={{marginTop:EStyleSheet.value("10rem")}}>FC PBB Terakhir</Text>
                                    </TouchableOpacity>
                                }
                         </View>
@@ -927,13 +974,48 @@ export default function SurveyLanjutanScreen() {
                 style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
                 <View style={{backgroundColor:"white",paddingBottom:EStyleSheet.value("10rem"),overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
                     <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
-                        <Text>Isi Nomor & Tanggal IMB</Text>
+                        <Text>Isi IMB</Text>
+                    </View>
+                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Atas Nama"/>
                     </View>
                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
                        <TextInput placeholder="Nomor"/>
                     </View>
                     <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
                        <TextInput placeholder="Tanggal"/>
+                    </View>
+                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
+                       <TextInput placeholder="Dikeluarkan oleh"/>
+                    </View>
+                    <View style={{marginTop:EStyleSheet.value("10rem"),paddingHorizontal:EStyleSheet.value("15rem"),justifyContent:"center",alignItems:"center"}}>
+                    <View style={{backgroundColor:"whitesmoke",marginBottom:EStyleSheet.value("10rem"),width:"100%",height:EStyleSheet.value("250rem")}}>
+                                 <View style={{height:"100%",justifyContent:"center",alignItems:"center"}}>
+                                    {
+                                        (lampiranNamaSuratTanah.fcsurattanah) ?
+                                        <Image resizeMode="contain" style={{width:"100%",height:"100%"}} source={{uri:lampiranNamaSuratTanah.fcsurattanah}}/>
+                                        :
+                                        <TouchableOpacity
+                                        style={{justifyContent:"center",alignItems:"center"}}
+                                        onPress={async ()=>{
+                                            let capture = await ImagePicker.launchCameraAsync();
+                                            if(!capture.cancelled){
+                                                setLampiranKTP((prev)=>{
+                                                    return {
+                                                        ...prev,
+                                                        fcsurattanah:capture.uri
+                                                    }
+                                                })
+                                            }
+                                            
+                                        }}
+                                        >
+                                            <AntDesign name="camerao" size={EStyleSheet.value("80rem")} color="#e3e3e3" />
+                                            <Text>FC IMB</Text>
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View>
                     </View>
                 </View>
             </View>
@@ -1393,6 +1475,104 @@ export default function SurveyLanjutanScreen() {
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Bisa Menunjukkan Surat Tanah Asli?</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setShowSelectBisaMenunjukkanSuratTanahAsli(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{sedangDigadaikan}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+                    {/* {
+                        (sedangDigadaikan==="Tidak") &&
+                        <TouchableOpacity
+                        activeOpacity={0.6} 
+                        onPress={()=>{
+                            setShowTidakSedangDigadaikan(true);
+                        }}
+                        style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                            <Text style={{color:"black"}}>Foto Dokumen Asli</Text>
+                        </TouchableOpacity>
+                    } */}
+                     {/* {
+                        (sedangDigadaikan==="Ya") &&
+                        <TouchableOpacity
+                        activeOpacity={0.6} 
+                        onPress={()=>{
+                            setShowSedangDigadaikan(true);
+                        }}
+                        style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                            <Text style={{color:"black"}}>Beri Keterangan</Text>
+                        </TouchableOpacity>
+                    } */}
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Ada IMB</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                    <TouchableOpacity 
+                    activeOpacity={0.7}
+                    onPress={()=>{
+                        setShowSelectIMB(true);
+                    }}
+                    style={{flexDirection:"row"}}>
+                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                            <Text>{adaIMB}</Text>
+                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                        </View>
+                    </TouchableOpacity>
+                    {
+                   (adaIMB==="Ada") &&
+                        <TouchableOpacity
+                        activeOpacity={0.6} 
+                        onPress={()=>{
+                            setShowIsiNoTglIMB(true);
+                        }}
+                        style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                            <Text style={{color:"black"}}>Isi IMB</Text>
+                        </TouchableOpacity>
+                    }
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
+                <Text>Ada PBB</Text>
+            </View>
+            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
+                <TouchableOpacity 
+                activeOpacity={0.7}
+                onPress={()=>{
+                    setShowSelectAdaPBB(true);
+                }}
+                style={{flexDirection:"row"}}>
+                    <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
+                        <Text>{adaPBB}</Text>
+                        <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
+                    </View>
+                </TouchableOpacity>
+               {
+                   (adaPBB==="Ada") &&
+                   <TouchableOpacity
+                   activeOpacity={0.6} 
+                   onPress={()=>{
+                       setShowModalDetailPBB(true);
+                   }}
+                   style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
+                       <Text style={{color:"black"}}>Detail PBB</Text>
+                   </TouchableOpacity>
+               }
+            </View>
+        </View>
+        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
+            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Luas Tanah (M2)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
@@ -1463,35 +1643,7 @@ export default function SurveyLanjutanScreen() {
             </View>
         </View>
         
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
-            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
-                <Text>Ada IMB</Text>
-            </View>
-            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                    <TouchableOpacity 
-                    activeOpacity={0.7}
-                    onPress={()=>{
-                        setShowSelectIMB(true);
-                    }}
-                    style={{flexDirection:"row"}}>
-                        <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
-                            <Text>{adaIMB}</Text>
-                            <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
-                        </View>
-                    </TouchableOpacity>
-                    {
-                   (adaIMB==="Ada") &&
-                        <TouchableOpacity
-                        activeOpacity={0.6} 
-                        onPress={()=>{
-                            setShowIsiNoTglIMB(true);
-                        }}
-                        style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
-                            <Text style={{color:"black"}}>Isi No. & Tgl</Text>
-                        </TouchableOpacity>
-                    }
-            </View>
-        </View>
+        
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text>Kapan Kira" Dibangun</Text>
@@ -1705,35 +1857,7 @@ export default function SurveyLanjutanScreen() {
                     </TouchableOpacity>
             </View>
         </View>
-        <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
-            <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
-                <Text>Ada PBB</Text>
-            </View>
-            <View style={{flex:1,backgroundColor:"white",flexDirection:"column",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TouchableOpacity 
-                activeOpacity={0.7}
-                onPress={()=>{
-                    setShowSelectAdaPBB(true);
-                }}
-                style={{flexDirection:"row"}}>
-                    <View style={{borderBottomWidth:1,flex:1,alignItems:"center",paddingBottom:EStyleSheet.value("5rem"),borderColor:"#e8e8e8",flexDirection:"row",justifyContent:"space-between"}}>
-                        <Text>{adaPBB}</Text>
-                        <AntDesign name="caretdown" size={EStyleSheet.value("10rem")} color="grey" />
-                    </View>
-                </TouchableOpacity>
-               {
-                   (adaPBB==="Ada") &&
-                   <TouchableOpacity
-                   activeOpacity={0.6} 
-                   onPress={()=>{
-                       setShowModalDetailPBB(true);
-                   }}
-                   style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
-                       <Text style={{color:"black"}}>Detail PBB</Text>
-                   </TouchableOpacity>
-               }
-            </View>
-        </View>
+       
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Permintaan</Text>
