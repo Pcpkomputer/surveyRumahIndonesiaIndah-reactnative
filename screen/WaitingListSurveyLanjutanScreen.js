@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{useState, useRef} from 'react';
-import { StyleSheet, Text, View,Dimensions, Pressable,ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View,Dimensions, Pressable,ScrollView, TouchableOpacity, ToastAndroid } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { StatusBarHeight } from '../utils/heightUtils';
@@ -52,6 +52,7 @@ export default function WaitingListSurveyLanjutanScreen(props) {
                         activeOpacity={0.8}
                         onPress={()=>{
                             //props.navigation.navigate("SurveyAwal",{draft:true});
+                            ToastAndroid.show("Survey masih belum di-acc",500);
                         }}
                         style={{backgroundColor:"white",padding:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("5rem"),...shadow,marginHorizontal:EStyleSheet.value("15rem"),marginBottom:EStyleSheet.value("15rem")}}>
                             <View style={{marginBottom:EStyleSheet.value("10rem"),flexDirection:"row",alignItems:"center",borderRadius:EStyleSheet.value("5rem")}}>
@@ -76,7 +77,7 @@ export default function WaitingListSurveyLanjutanScreen(props) {
                         <TouchableOpacity 
                         activeOpacity={0.8}
                         onPress={()=>{
-                            //props.navigation.navigate("SurveyAwal",{draft:true});
+                            props.navigation.navigate("SurveyLanjutan");
                         }}
                         style={{backgroundColor:"white",padding:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("15rem"),borderRadius:EStyleSheet.value("5rem"),...shadow,marginHorizontal:EStyleSheet.value("15rem"),marginBottom:EStyleSheet.value("15rem")}}>
                             <View style={{marginBottom:EStyleSheet.value("10rem"),flexDirection:"row",alignItems:"center",borderRadius:EStyleSheet.value("5rem")}}>

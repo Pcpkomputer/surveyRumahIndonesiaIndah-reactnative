@@ -133,33 +133,33 @@ export default function DashboardScreen(props) {
                             />
                             <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey Lanjutan</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity 
+                        <View
                         activeOpacity={0.8}
                         onPress={()=>{
                             props.navigation.navigate("RiwayatSurvey");
                         }}
-                        style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1}}>
+                        style={{backgroundColor:"white",opacity:0,paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1}}>
                            
                              <HistorySVG
                             width={EStyleSheet.value("80rem")}
                             height={EStyleSheet.value("80rem")}
                             />
                             <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Riwayat Survey</Text>
-                        </TouchableOpacity>
+                        </View>
                     </View>
                     <View style={{marginBottom:EStyleSheet.value("15rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
-                        <TouchableOpacity 
+                        <View
                         activeOpacity={0.8}
                         onPress={()=>{
                             props.navigation.navigate("SurveyTersimpan");
                         }}
-                        style={{backgroundColor:"white",paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>
+                        style={{backgroundColor:"white",opacity:0,paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1,marginRight:EStyleSheet.value("15rem")}}>
                             <SavedSVG
                             width={EStyleSheet.value("80rem")}
                             height={EStyleSheet.value("80rem")}
                             />
                             <Text style={{fontFamily:"NunitoBold",marginTop:EStyleSheet.value("10rem"),color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey Tersimpan</Text>
-                        </TouchableOpacity>
+                        </View>
                         <View style={{backgroundColor:"white",opacity:0,paddingVertical:EStyleSheet.value("20rem"),borderRadius:EStyleSheet.value("5rem"),borderColor:"#cad8ec",justifyContent:"center",alignItems:"center",borderWidth:1,flex:1}}>
                             <Text style={{fontFamily:"NunitoBold",color:"#47515b",fontSize:EStyleSheet.value("15rem")}}>Survey</Text>
                         </View>

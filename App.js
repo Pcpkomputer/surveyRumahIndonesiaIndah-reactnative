@@ -14,6 +14,7 @@ import ListSurveyAwalTersimpanScreen from './screen/ListSurveyAwalTersimpanScree
 import SurveyAwalScreen from './screen/SurveyAwalScreen';
 import DetailRiwayatSurveyAwalScreen from './screen/DetailRiwayatSurveyAwalScreen';
 import WaitingListSurveyLanjutanScreen from './screen/WaitingListSurveyLanjutanScreen';
+import SurveyLanjutanScreen from './screen/SurveyLanjutanScreen';
 
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
@@ -92,6 +93,11 @@ export default function App() {
            headerShown:false
         }}
         component={WaitingListSurveyLanjutanScreen} />
+        <Stack.Screen name="SurveyLanjutan" 
+        options={{
+           headerShown:false
+        }}
+        component={SurveyLanjutanScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
