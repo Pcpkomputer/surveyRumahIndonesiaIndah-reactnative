@@ -6,9 +6,13 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { StatusBarHeight } from '../utils/heightUtils';
 import { AntDesign, FontAwesome, MaterialIcons, Entypo} from '@expo/vector-icons'; 
 
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+
 import { Checkbox } from 'react-native-paper';
 
 import Carousel from "pinar";
+
+import {makeid} from '../utils/extra_utils';
 
 import LandingSVG from '../svg/LandingSVG';
 
@@ -16,6 +20,8 @@ import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 
 import * as Location from 'expo-location';
+
+import {endpoint} from '../utils/endpoint';
 
 let shadow = {
     shadowColor: "#000",
@@ -332,8 +338,173 @@ export default function SurveyAwalScreen(props) {
   let [bisaAmprahPDAM, setBisaAmprahPDAM] = useState("Bisa");
 
 
+  let [yakinSubmitModal, setYakinSubmitModal] = useState(false);
+
+
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+
+        {
+            (yakinSubmitModal) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setYakinSubmitModal(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Sudah yakin mengisi semua data?</Text>
+                    </View>
+                    <View style={{padding:EStyleSheet.value("15rem"),flexDirection:"row",paddingVertical:EStyleSheet.value("20rem")}}>
+                        <Pressable 
+                        onPress={()=>{
+                            setYakinSubmitModal(false);
+                        }}
+                        android_ripple={{
+                            color:"white"
+                        }}
+                        style={{flex:1,borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",marginRight:EStyleSheet.value("10rem"),backgroundColor:"whitesmoke"}}>
+                            <Text>Belum</Text>
+                        </Pressable>
+                        <Pressable 
+                        onPress={async ()=>{
+                            let payload = {};
+
+                            payload.informasipenjual = informasiPenjual;
+                            payload.alamatobjek = alamatObjek;
+                            payload.arsitekturrumah = {
+                                ...arsitekturRumah,
+                                garasi:{
+                                    garasi,
+                                    daftarkendaraan:daftarKendaraan
+                                }
+                            };
+                            payload.keadaanrumah = {
+                                kapankirakiradibangun:kapandibangun,
+                                butuhperbaikan:kondisirumah,
+                                kebersihandankerapihan:kebersihandankerapihan
+                            }
+            
+                            payload.fasilitas = {
+                                tersambungPLN:adaPLN,
+                                tersambungPDAM:adaPDAM,
+                                adasinyalinternet:adasinyalinternet
+                            };
+            
+                            payload.aksesbilitas = {
+                                ...aksesbilitas,
+                                jalan:jalan,
+                                jalanmasuk:jalanmasuk
+                            };
+                            
+                            payload.suasanalingkungan = {
+                                rawanbanjir:rawanbanjir,
+                                keamanan:keamanan,
+                                kebersihan:kebersihan
+                            };
+            
+                            payload.harga = {
+                                ...harga
+                            };
+            
+                            payload.googlemaps = {
+                                ...location
+                            };
+            
+                            let fototampakdarijalan = fotoTampakDariJalan.map((item,index)=>{
+                                return {
+                                    uri: item.uri,
+                                    type: 'image/jpeg',
+                                    name: `fototampakdarijalan-${index}.jpg`,
+                                };
+                            })
+            
+                            let fototampakdepan = fotoTampakDepan.map((item,index)=>{
+                                return {
+                                    uri: item.uri,
+                                    type: 'image/jpeg',
+                                    name: `fototampakdepan-${index}.jpg`,
+                                };
+                            });
+            
+                            let fotodalamrumah = fotoDalamRumah.map((item,index)=>{
+                                return {
+                                    uri: item.uri,
+                                    type: 'image/jpeg',
+                                    name: `fotodalamrumah-${index}.jpg`,
+                                };
+                            });
+
+                            let uploadfotosingle = async (json,label)=>{
+
+                                let formdata = new FormData();
+                                formdata.append("file",json);
+                                formdata.append("label",label);
+
+                                let request = await fetch(`${endpoint}/api/surveyor/uploadfoto`,{
+                                    method:"POST",
+                                    body:formdata
+                                });
+                                let response = await request.text();
+                                return response;
+                            };
+
+
+                           let promisefototampakdarijalan = [];
+                           fototampakdarijalan.forEach((item,index)=>{
+                                if(item.uri.length>0){
+                                    promisefototampakdarijalan.push(uploadfotosingle(item,`fototampakdarijalan-${makeid(5)}-`));
+                                }
+                            });
+
+                            let resolvefototampakdarijalan = await Promise.all(promisefototampakdarijalan);
+
+                            console.log(resolvefototampakdarijalan);
+            
+                            // let formdata = new FormData();
+                            // formdata.append("json",JSON.stringify(payload));
+            
+                            // fototampakdarijalan.forEach((file,index)=>{
+                            //     if(file.uri.length>0){
+                            //         formdata.append("fototampakdarijalan[]",file);
+                            //     }
+                            // });
+                            
+                            // fototampakdepan.forEach((file,index)=>{
+                            //     if(file.uri.length>0){
+                            //         formdata.append("fototampakdepan[]",file);
+                            //     }   
+                            // });
+
+                            // fotodalamrumah.forEach((file,index)=>{
+                            //     if(file.uri.length>0){
+                            //         formdata.append("fotodalamrumah[]",file);
+                            //     }
+                            // });
+
+                            // let request = await fetch(`${endpoint}/api/surveyor/insertsurveyawal`,{
+                            //     method:"POST",
+                            //     body:formdata
+                            // });
+
+                            // let response = await request.text();
+
+                            // console.log(response);
+            
+                        }}
+                        android_ripple={{
+                            color:"white"
+                        }}
+                        style={{flex:1,borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke"}}>
+                            <Text>Sudah</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </View>
+        }
+
 
     {
             (showModalAmbilFotoTampakDepan) &&
@@ -361,13 +532,26 @@ export default function SurveyAwalScreen(props) {
                                                     <TouchableOpacity
                                                     onPress={async ()=>{
                                                         let capture = await ImagePicker.launchCameraAsync();
+
+                                                     
+
+
                                                         if(!capture.cancelled){
+
+                                                            const manipResult = await manipulateAsync(
+                                                                capture.uri,
+                                                                [
+                                                                  { resize: {height:1200,width:800} },
+                                                                ],
+                                                                { compress: 1, format: SaveFormat.JPEG }
+                                                              );
+
                                                             setFotoTampakDepan((prev)=>{
                                                                 return prev.map((item,i)=>{
                                                                     if(index===i){
                                                                         return {
                                                                             ...item,
-                                                                            uri:capture.uri
+                                                                            uri:manipResult.uri
                                                                         }
                                                                     }
                                                                     return item;
@@ -418,13 +602,26 @@ export default function SurveyAwalScreen(props) {
                                                     <TouchableOpacity
                                                     onPress={async ()=>{
                                                         let capture = await ImagePicker.launchCameraAsync();
+
+
+
                                                         if(!capture.cancelled){
+
+
+                                                        const manipResult = await manipulateAsync(
+                                                            capture.uri,
+                                                            [
+                                                              { resize: {height:1200,width:800} },
+                                                            ],
+                                                            { compress: 1, format: SaveFormat.JPEG }
+                                                          );
+
                                                             setFotoTampakDariJalan((prev)=>{
                                                                 return prev.map((item,i)=>{
                                                                     if(index===i){
                                                                         return {
                                                                             ...item,
-                                                                            uri:capture.uri
+                                                                            uri:manipResult.uri
                                                                         }
                                                                     }
                                                                     return item;
@@ -929,13 +1126,26 @@ export default function SurveyAwalScreen(props) {
                                                     <TouchableOpacity
                                                     onPress={async ()=>{
                                                         let capture = await ImagePicker.launchCameraAsync();
+
+                                                    
+
+
                                                         if(!capture.cancelled){
+
+                                                            const manipResult = await manipulateAsync(
+                                                                capture.uri,
+                                                                [
+                                                                  { resize: {height:1200,width:800} },
+                                                                ],
+                                                                { compress: 1, format: SaveFormat.JPEG }
+                                                              );
+
                                                             setFotoDalamRumah((prev)=>{
                                                                 return prev.map((item,i)=>{
                                                                     if(i===index){
                                                                         return {
                                                                             ...item,
-                                                                            uri:capture.uri
+                                                                            uri:manipResult.uri
                                                                         }
                                                                     }
                                                                     return item;
@@ -2801,75 +3011,7 @@ export default function SurveyAwalScreen(props) {
                 color:"white"
             }}
             onPress={()=>{
-                let payload = {};
-
-                payload.informasipenjual = informasiPenjual;
-                payload.alamatobjek = alamatObjek;
-                payload.arsitekturrumah = {
-                    ...arsitekturRumah,
-                    garasi:{
-                        garasi,
-                        daftarkendaraan:daftarKendaraan
-                    }
-                };
-                payload.keadaanrumah = {
-                    kapankirakiradibangun:kapandibangun,
-                    butuhperbaikan:kondisirumah,
-                    kebersihandankerapihan:kebersihandankerapihan
-                }
-
-                payload.fasilitas = {
-                    tersambungPLN:adaPLN,
-                    tersambungPDAM:adaPDAM,
-                    adasinyalinternet:adasinyalinternet
-                };
-
-                payload.aksesbilitas = {
-                    ...aksesbilitas,
-                    jalan:jalan,
-                    jalanmasuk:jalanmasuk
-                };
-                
-                payload.suasanalingkungan = {
-                    rawanbanjir:rawanbanjir,
-                    keamanan:keamanan,
-                    kebersihan:kebersihan
-                };
-
-                payload.harga = {
-                    ...harga
-                };
-
-                payload.googlemaps = {
-                    ...location
-                };
-
-                let fototampakdarijalan = fotoTampakDariJalan.map((item,index)=>{
-                    return {
-                        uri: item.uri,
-                        type: 'image/jpeg',
-                        name: `fototampakdarijalan-${index}.jpg`,
-                    };
-                })
-
-                let fototampakdepan = fotoTampakDepan.map((item,index)=>{
-                    return {
-                        uri: item.uri,
-                        type: 'image/jpeg',
-                        name: `fototampakdepan-${index}.jpg`,
-                    };
-                });
-
-                let fotodalamrumah = fotoDalamRumah.map((item,index)=>{
-                    return {
-                        uri: item.uri,
-                        type: 'image/jpeg',
-                        name: `fotodalamrumah-${index}.jpg`,
-                    };
-                });
-
-                console.log(payload);
-
+                setYakinSubmitModal(true);
             }}
             style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
                 <Text>Simpan</Text>

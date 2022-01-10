@@ -1,6 +1,6 @@
 const endpoint = "https://www.appdesignmaker.com/api";
 
-function makeid(length) {
+export function makeid(length) {
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
