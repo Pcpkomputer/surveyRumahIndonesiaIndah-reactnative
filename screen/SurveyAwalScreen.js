@@ -8,7 +8,7 @@ import { AntDesign, FontAwesome, MaterialIcons, Entypo} from '@expo/vector-icons
 
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
 
-import { Checkbox } from 'react-native-paper';
+import { ActivityIndicator, Checkbox } from 'react-native-paper';
 
 import Carousel from "pinar";
 
@@ -341,8 +341,20 @@ export default function SurveyAwalScreen(props) {
   let [yakinSubmitModal, setYakinSubmitModal] = useState(false);
 
 
+  let [smokeScreenOpened, setSmokeScreenOpened] = useState(false);
+
+
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+        {
+            (smokeScreenOpened) &&
+            <View style={{position:"absolute",width:"100%",justifyContent:"center",alignItems:"center",height:"100%",zIndex:1000}}>
+                    <View style={{position:"absolute",width:"100%",height:"100%",backgroundColor:"black",opacity:0.3}}>
+                    </View>
+                    <ActivityIndicator color="white" size="large"/>
+            </View>
+        }
 
 
         {
@@ -370,6 +382,11 @@ export default function SurveyAwalScreen(props) {
                         </Pressable>
                         <Pressable 
                         onPress={async ()=>{
+
+                            
+                            setSmokeScreenOpened(true);
+                            setYakinSubmitModal(false);
+
                             let payload = {};
 
                             payload.informasipenjual = informasiPenjual;
@@ -447,7 +464,7 @@ export default function SurveyAwalScreen(props) {
                                     method:"POST",
                                     body:formdata
                                 });
-                                let response = await request.text();
+                                let response = await request.json();
                                 return response;
                             };
 
@@ -460,8 +477,64 @@ export default function SurveyAwalScreen(props) {
                             });
 
                             let resolvefototampakdarijalan = await Promise.all(promisefototampakdarijalan);
+                            resolvefototampakdarijalan = resolvefototampakdarijalan.map((item,index)=>item.filename)
 
-                            console.log(resolvefototampakdarijalan);
+                            //////////
+                           
+                            let promisefototampakdepan = [];
+                            fototampakdepan.forEach((item,index)=>{
+                                 if(item.uri.length>0){
+                                      promisefototampakdepan.push(uploadfotosingle(item,`fototampakdaridepan-${makeid(5)}-`));
+                                 }
+                             });
+
+                             let resolvefototampakdaridepan = await Promise.all(promisefototampakdepan);
+                             resolvefototampakdaridepan = resolvefototampakdaridepan.map((item)=>item.filename);
+
+                            //////////
+
+                             let promisefotodalamrumah = [];
+                             fotodalamrumah.forEach((item,index)=>{
+                                  if(item.uri.length>0){
+                                      promisefotodalamrumah.push(uploadfotosingle(item,`fotodalamrumah-${makeid(5)}-`));
+                                  }
+                              });
+  
+                              let resolvefotodalamrumah = await Promise.all(promisefotodalamrumah);
+                              resolvefotodalamrumah = resolvefotodalamrumah.map((item,index)=>item.filename)
+                            
+                            
+                            payload.fototampakdarijalan = resolvefototampakdarijalan;
+                            payload.fototampakdepan = resolvefototampakdaridepan;
+                            payload.fotodalamrumah = resolvefotodalamrumah;
+
+                            let stringify = JSON.stringify(payload);
+
+                            let req2 = await fetch(`${endpoint}/api/surveyor/insertsurveyawal`,{
+                                method:"POST",
+                                headers:{
+                                    "content-type":"application/json"
+                                },
+                                body:JSON.stringify({
+                                    payload:stringify
+                                })
+                            });
+
+                            let res2 = await req2.json();
+
+            
+                            
+                            if(res2.success){
+                                alert(res2.msg);
+                                props.navigation.goBack();
+                            }
+
+                            setSmokeScreenOpened(false);
+
+
+                            
+
+
             
                             // let formdata = new FormData();
                             // formdata.append("json",JSON.stringify(payload));

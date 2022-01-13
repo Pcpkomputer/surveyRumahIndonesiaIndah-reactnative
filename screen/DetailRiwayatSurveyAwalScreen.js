@@ -1,19 +1,27 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{useState, useRef, useEffect} from 'react';
-import { StyleSheet, Text, View,Dimensions, Pressable,TextInput, TouchableOpacity, ScrollView, ToastAndroid,Image } from 'react-native';
+import { StyleSheet, Text, Platform, Linking, View,Dimensions, Pressable,TextInput, TouchableOpacity, ScrollView, ToastAndroid,Image } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { StatusBarHeight } from '../utils/heightUtils';
 import { AntDesign, FontAwesome, MaterialIcons, Entypo} from '@expo/vector-icons'; 
 
-import { Checkbox } from 'react-native-paper';
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+
+import { ActivityIndicator, Checkbox } from 'react-native-paper';
 
 import Carousel from "pinar";
+
+import {makeid} from '../utils/extra_utils';
 
 import LandingSVG from '../svg/LandingSVG';
 
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
+
+import * as Location from 'expo-location';
+
+import {endpoint} from '../utils/endpoint';
 
 let shadow = {
     shadowColor: "#000",
@@ -27,7 +35,66 @@ shadowRadius: 3.84,
 elevation: 5,
 }
 
-export default function DetailRiwayatSurveyAwalScreen() {
+export default function DetailRiwayatSurveyAwalScreen(props) {
+
+
+  let [informasiPenjual, setInformasiPenjual] = useState({
+      nama:"",
+      alamat:{
+          line1:"",
+          line2:"",
+          rtrw:"",
+          keldesa:"",
+          kecamatan:"",
+          kabupatenkota:"",
+          provinsi:""
+      }
+  });
+
+  let [alamatObjek, setAlamatObjek] = useState({
+    line1:"",
+    line2:"",
+    rtrw:"",
+    keldesa:"",
+    kecamatan:"",
+    kabupatenkota:"",
+    provinsi:""
+  })
+
+  let [arsitekturRumah, setArsitekturRumah] = useState({
+      luastanah:"",
+      luasbangunan:"",
+      jumlahKT:"",
+      jumlahKM:""
+  });
+
+  let [aksesbilitas, setAksesbilitas] = useState({
+      pasarterdekat:"",
+      sekolahterdekat:"",
+      stasiunkaterdekat:"",
+      jarakkejalurbis:"",
+      jalurbus:"",
+      perumahanterdekat:""
+  });
+
+  let [harga, setHarga] = useState({
+      permintaanpenjual:"",
+      hargapasar:""
+  });
+
+  let [location,setLocation] = useState({
+      coords:{
+          latitude:"",
+          longitude:""
+      }
+  })
+
+
+  useEffect(()=>{
+    if(props.route?.params?.draft){
+        alert("Opened From Draft");
+    }
+  },[])
 
   let [showModalInputKendaraan, setShowModalInputKendaraan] = useState(false);
 
@@ -271,8 +338,251 @@ export default function DetailRiwayatSurveyAwalScreen() {
   let [bisaAmprahPDAM, setBisaAmprahPDAM] = useState("Bisa");
 
 
+  let [yakinSubmitModal, setYakinSubmitModal] = useState(false);
+
+
+  let [smokeScreenOpened, setSmokeScreenOpened] = useState(false);
+
+
+  useEffect(()=>{
+    //alert(props.route.params.item);
+  },[]);
+
+
   return (
     <View style={{flex:1,backgroundColor:"white"}}>
+
+        {
+            (smokeScreenOpened) &&
+            <View style={{position:"absolute",width:"100%",justifyContent:"center",alignItems:"center",height:"100%",zIndex:1000}}>
+                    <View style={{position:"absolute",width:"100%",height:"100%",backgroundColor:"black",opacity:0.3}}>
+                    </View>
+                    <ActivityIndicator color="white" size="large"/>
+            </View>
+        }
+
+
+        {
+            (yakinSubmitModal) &&
+            <View style={{position:"absolute",width:"100%",height:"100%",justifyContent:"center",alignItems:"center",zIndex:1000}}>
+                <Pressable 
+                onPress={()=>{
+                    setYakinSubmitModal(false);
+                }}
+                style={{backgroundColor:"black",position:"absolute",opacity:0.2,width:"100%",height:"100%",zIndex:999}}></Pressable>
+                <View style={{backgroundColor:"white",overflow:"hidden",width:Dimensions.get("screen").width-EStyleSheet.value("50rem"),borderRadius:EStyleSheet.value("5rem"),zIndex:1000}}>
+                    <View style={{height:EStyleSheet.value("50rem"),backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center"}}>
+                        <Text>Sudah yakin mengisi semua data?</Text>
+                    </View>
+                    <View style={{padding:EStyleSheet.value("15rem"),flexDirection:"row",paddingVertical:EStyleSheet.value("20rem")}}>
+                        <Pressable 
+                        onPress={()=>{
+                            setYakinSubmitModal(false);
+                        }}
+                        android_ripple={{
+                            color:"white"
+                        }}
+                        style={{flex:1,borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",marginRight:EStyleSheet.value("10rem"),backgroundColor:"whitesmoke"}}>
+                            <Text>Belum</Text>
+                        </Pressable>
+                        <Pressable 
+                        onPress={async ()=>{
+
+                            
+                            setSmokeScreenOpened(true);
+                            setYakinSubmitModal(false);
+
+                            let payload = {};
+
+                            payload.informasipenjual = informasiPenjual;
+                            payload.alamatobjek = alamatObjek;
+                            payload.arsitekturrumah = {
+                                ...arsitekturRumah,
+                                garasi:{
+                                    garasi,
+                                    daftarkendaraan:daftarKendaraan
+                                }
+                            };
+                            payload.keadaanrumah = {
+                                kapankirakiradibangun:kapandibangun,
+                                butuhperbaikan:kondisirumah,
+                                kebersihandankerapihan:kebersihandankerapihan
+                            }
+            
+                            payload.fasilitas = {
+                                tersambungPLN:adaPLN,
+                                tersambungPDAM:adaPDAM,
+                                adasinyalinternet:adasinyalinternet
+                            };
+            
+                            payload.aksesbilitas = {
+                                ...aksesbilitas,
+                                jalan:jalan,
+                                jalanmasuk:jalanmasuk
+                            };
+                            
+                            payload.suasanalingkungan = {
+                                rawanbanjir:rawanbanjir,
+                                keamanan:keamanan,
+                                kebersihan:kebersihan
+                            };
+            
+                            payload.harga = {
+                                ...harga
+                            };
+            
+                            payload.googlemaps = {
+                                ...location
+                            };
+            
+                            let fototampakdarijalan = fotoTampakDariJalan.map((item,index)=>{
+                                return {
+                                    uri: item.uri,
+                                    type: 'image/jpeg',
+                                    name: `fototampakdarijalan-${index}.jpg`,
+                                };
+                            })
+            
+                            let fototampakdepan = fotoTampakDepan.map((item,index)=>{
+                                return {
+                                    uri: item.uri,
+                                    type: 'image/jpeg',
+                                    name: `fototampakdepan-${index}.jpg`,
+                                };
+                            });
+            
+                            let fotodalamrumah = fotoDalamRumah.map((item,index)=>{
+                                return {
+                                    uri: item.uri,
+                                    type: 'image/jpeg',
+                                    name: `fotodalamrumah-${index}.jpg`,
+                                };
+                            });
+
+                            let uploadfotosingle = async (json,label)=>{
+
+                                let formdata = new FormData();
+                                formdata.append("file",json);
+                                formdata.append("label",label);
+
+                                let request = await fetch(`${endpoint}/api/surveyor/uploadfoto`,{
+                                    method:"POST",
+                                    body:formdata
+                                });
+                                let response = await request.json();
+                                return response;
+                            };
+
+
+                           let promisefototampakdarijalan = [];
+                           fototampakdarijalan.forEach((item,index)=>{
+                                if(item.uri.length>0){
+                                    promisefototampakdarijalan.push(uploadfotosingle(item,`fototampakdarijalan-${makeid(5)}-`));
+                                }
+                            });
+
+                            let resolvefototampakdarijalan = await Promise.all(promisefototampakdarijalan);
+                            resolvefototampakdarijalan = resolvefototampakdarijalan.map((item,index)=>item.filename)
+
+                            //////////
+                           
+                            let promisefototampakdepan = [];
+                            fototampakdepan.forEach((item,index)=>{
+                                 if(item.uri.length>0){
+                                      promisefototampakdepan.push(uploadfotosingle(item,`fototampakdaridepan-${makeid(5)}-`));
+                                 }
+                             });
+
+                             let resolvefototampakdaridepan = await Promise.all(promisefototampakdepan);
+                             resolvefototampakdaridepan = resolvefototampakdaridepan.map((item)=>item.filename);
+
+                            //////////
+
+                             let promisefotodalamrumah = [];
+                             fotodalamrumah.forEach((item,index)=>{
+                                  if(item.uri.length>0){
+                                      promisefotodalamrumah.push(uploadfotosingle(item,`fotodalamrumah-${makeid(5)}-`));
+                                  }
+                              });
+  
+                              let resolvefotodalamrumah = await Promise.all(promisefotodalamrumah);
+                              resolvefotodalamrumah = resolvefotodalamrumah.map((item,index)=>item.filename)
+                            
+                            
+                            payload.fototampakdarijalan = resolvefototampakdarijalan;
+                            payload.fototampakdepan = resolvefototampakdaridepan;
+                            payload.fotodalamrumah = resolvefotodalamrumah;
+
+                            let stringify = JSON.stringify(payload);
+
+                            let req2 = await fetch(`${endpoint}/api/surveyor/insertsurveyawal`,{
+                                method:"POST",
+                                headers:{
+                                    "content-type":"application/json"
+                                },
+                                body:JSON.stringify({
+                                    payload:stringify
+                                })
+                            });
+
+                            let res2 = await req2.json();
+
+            
+                            
+                            if(res2.success){
+                                alert(res2.msg);
+                                props.navigation.goBack();
+                            }
+
+                            setSmokeScreenOpened(false);
+
+
+                            
+
+
+            
+                            // let formdata = new FormData();
+                            // formdata.append("json",JSON.stringify(payload));
+            
+                            // fototampakdarijalan.forEach((file,index)=>{
+                            //     if(file.uri.length>0){
+                            //         formdata.append("fototampakdarijalan[]",file);
+                            //     }
+                            // });
+                            
+                            // fototampakdepan.forEach((file,index)=>{
+                            //     if(file.uri.length>0){
+                            //         formdata.append("fototampakdepan[]",file);
+                            //     }   
+                            // });
+
+                            // fotodalamrumah.forEach((file,index)=>{
+                            //     if(file.uri.length>0){
+                            //         formdata.append("fotodalamrumah[]",file);
+                            //     }
+                            // });
+
+                            // let request = await fetch(`${endpoint}/api/surveyor/insertsurveyawal`,{
+                            //     method:"POST",
+                            //     body:formdata
+                            // });
+
+                            // let response = await request.text();
+
+                            // console.log(response);
+            
+                        }}
+                        android_ripple={{
+                            color:"white"
+                        }}
+                        style={{flex:1,borderRadius:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("10rem"),justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke"}}>
+                            <Text>Sudah</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </View>
+        }
+
 
     {
             (showModalAmbilFotoTampakDepan) &&
@@ -300,13 +610,26 @@ export default function DetailRiwayatSurveyAwalScreen() {
                                                     <TouchableOpacity
                                                     onPress={async ()=>{
                                                         let capture = await ImagePicker.launchCameraAsync();
+
+                                                     
+
+
                                                         if(!capture.cancelled){
+
+                                                            const manipResult = await manipulateAsync(
+                                                                capture.uri,
+                                                                [
+                                                                  { resize: {height:1200,width:800} },
+                                                                ],
+                                                                { compress: 1, format: SaveFormat.JPEG }
+                                                              );
+
                                                             setFotoTampakDepan((prev)=>{
                                                                 return prev.map((item,i)=>{
                                                                     if(index===i){
                                                                         return {
                                                                             ...item,
-                                                                            uri:capture.uri
+                                                                            uri:manipResult.uri
                                                                         }
                                                                     }
                                                                     return item;
@@ -357,13 +680,26 @@ export default function DetailRiwayatSurveyAwalScreen() {
                                                     <TouchableOpacity
                                                     onPress={async ()=>{
                                                         let capture = await ImagePicker.launchCameraAsync();
+
+
+
                                                         if(!capture.cancelled){
+
+
+                                                        const manipResult = await manipulateAsync(
+                                                            capture.uri,
+                                                            [
+                                                              { resize: {height:1200,width:800} },
+                                                            ],
+                                                            { compress: 1, format: SaveFormat.JPEG }
+                                                          );
+
                                                             setFotoTampakDariJalan((prev)=>{
                                                                 return prev.map((item,i)=>{
                                                                     if(index===i){
                                                                         return {
                                                                             ...item,
-                                                                            uri:capture.uri
+                                                                            uri:manipResult.uri
                                                                         }
                                                                     }
                                                                     return item;
@@ -868,13 +1204,26 @@ export default function DetailRiwayatSurveyAwalScreen() {
                                                     <TouchableOpacity
                                                     onPress={async ()=>{
                                                         let capture = await ImagePicker.launchCameraAsync();
+
+                                                    
+
+
                                                         if(!capture.cancelled){
+
+                                                            const manipResult = await manipulateAsync(
+                                                                capture.uri,
+                                                                [
+                                                                  { resize: {height:1200,width:800} },
+                                                                ],
+                                                                { compress: 1, format: SaveFormat.JPEG }
+                                                              );
+
                                                             setFotoDalamRumah((prev)=>{
                                                                 return prev.map((item,i)=>{
                                                                     if(i===index){
                                                                         return {
                                                                             ...item,
-                                                                            uri:capture.uri
+                                                                            uri:manipResult.uri
                                                                         }
                                                                     }
                                                                     return item;
@@ -991,18 +1340,63 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text>Ambil Kordinat GPS</Text>
                     </View>
                    <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput editable={false} placeholder="Latitude"/>
+                       <TextInput editable={false} 
+                       value={location.coords.latitude.toString()}
+                       placeholder="Latitude"/>
                     </View>
                     <View style={{paddingVertical:EStyleSheet.value("15rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                       <TextInput editable={false} placeholder="Longitude"/>
+                       <TextInput editable={false} 
+                       value={location.coords.longitude.toString()}
+                       placeholder="Longitude"/>
                     </View>
                     <View style={{marginTop:EStyleSheet.value("5rem"),flexDirection:"row",paddingHorizontal:EStyleSheet.value("20rem")}}>
-                        <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),marginRight:EStyleSheet.value("15rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                        <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={async ()=>{
+                            let { status } = await Location.requestForegroundPermissionsAsync();
+                            if (status !== 'granted') {
+                              alert('Permission to access location was denied');
+                            }
+                            else{
+                                let enabled = await Location.hasServicesEnabledAsync();
+                                if(enabled){
+                                    let provider = await Location.enableNetworkProviderAsync();
+                                     let location = await Location.getCurrentPositionAsync({});
+    
+                                    // let l = await Location.reverseGeocodeAsync({
+                                    //     latitude:location.coords.latitude,
+                                    //      longitude:location.coords.longitude
+                                    // });
+                                    setLocation(location);
+                                }   
+                                else{
+                                    alert("Not supported service");
+                                }
+                                
+    
+                               
+                            }   
+                        }}
+                        style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),marginRight:EStyleSheet.value("15rem"),paddingVertical:EStyleSheet.value("10rem")}}>
                             <Text>Ambil Kordinat</Text>
-                        </View>
-                        <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("10rem")}}>
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={()=>{
+                            const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+                            const latLng = `${location.coords.latitude},${location.coords.longitude}`;
+                            const label = 'Cek Google Map';
+                            const url = Platform.select({
+                            ios: `${scheme}${label}@${latLng}`,
+                            android: `${scheme}${latLng}(${label})`
+                            });
+
+                                
+                            Linking.openURL(url);
+                        }}  
+                        style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"whitesmoke",borderRadius:EStyleSheet.value("5rem"),paddingHorizontal:EStyleSheet.value("10rem"),paddingVertical:EStyleSheet.value("10rem")}}>
                             <Text>Cek Google Map</Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -1589,7 +1983,7 @@ export default function DetailRiwayatSurveyAwalScreen() {
 
         <View style={{height:StatusBarHeight}}></View>
         <View style={{backgroundColor:"#f6f7fb",justifyContent:"center",alignItems:"center",height:EStyleSheet.value("50rem")}}>
-            <Text style={{fontSize:EStyleSheet.value("16rem"),color:"#a9adb8"}}>Berikut adalah hasil riwayat survey</Text>
+            <Text style={{fontSize:EStyleSheet.value("16rem"),color:"#a9adb8"}}>Isikan form survey awal berikut</Text>
         </View>
        <ScrollView>
        <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -1600,7 +1994,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text>Nama (Sesuai KTP)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} editable={false} style={{flex:1}} placeholder='Nama (Sesuai KTP)'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            nama:text
+                        }
+                    })
+                }}
+                value={informasiPenjual.nama}
+                style={{flex:1}} placeholder='Nama (Sesuai KTP)'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1608,13 +2012,104 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text>Alamat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} placeholder='Line 1'/>
-                <TextInput editable={false} placeholder='Line 2'/>
-                <TextInput editable={false} placeholder='RT/RW'/>
-                <TextInput editable={false} placeholder='Kel/Desa'/>
-                <TextInput editable={false} placeholder='Kecamatan'/>
-                <TextInput editable={false} placeholder='Kabupaten/Kota'/>
-                <TextInput editable={false} placeholder='Provinsi'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                line1:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.line1}
+                placeholder='Line 1'/>
+                <TextInput editable={false} 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                line2:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.line2}
+                placeholder='Line 2'/>
+                <TextInput editable={false} 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                rtrw:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.rtrw}
+                placeholder='RT/RW'/>
+                <TextInput editable={false} 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                keldesa:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.keldesa}
+                placeholder='Kel/Desa'/>
+                <TextInput editable={false} 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                kecamatan:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.kecamatan}
+                placeholder='Kecamatan'/>
+                <TextInput editable={false} 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                kabupatenkota:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.kabupatenkota}
+                placeholder='Kabupaten/Kota'/>
+                <TextInput editable={false} 
+                  onChangeText={(text)=>{
+                    setInformasiPenjual((prev)=>{
+                        return {
+                            ...prev,
+                            alamat:{
+                                ...prev.alamat,
+                                provinsi:text
+                            }
+                        }
+                    })
+                }}
+                value={informasiPenjual.alamat.provinsi}
+                placeholder='Provinsi'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1660,13 +2155,83 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text>Alamat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} placeholder='Line 1'/>
-                <TextInput editable={false} placeholder='Line 2'/>
-                <TextInput editable={false} placeholder='RT/RW'/>
-                <TextInput editable={false} placeholder='Kel/Desa'/>
-                <TextInput editable={false} placeholder='Kecamatan'/>
-                <TextInput editable={false} placeholder='Kabupaten/Kota'/>
-                <TextInput editable={false} placeholder='Provinsi'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            line1:text
+                        }
+                    })
+                }}
+                value={alamatObjek.line1}
+                placeholder='Line 1'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            line2:text
+                        }
+                    })
+                }}
+                value={alamatObjek.line2}
+                placeholder='Line 2'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            rtrw:text
+                        }
+                    })
+                }}
+                value={alamatObjek.rtrw}
+                placeholder='RT/RW'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            keldesa:text
+                        }
+                    })
+                }}
+                value={alamatObjek.keldesa}
+                placeholder='Kel/Desa'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            kecamatan:text
+                        }
+                    })
+                }}
+                value={alamatObjek.kecamatan}
+                placeholder='Kecamatan'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            kabupatenkota:text
+                        }
+                    })
+                }}
+                value={alamatObjek.kabupatenkota}
+                placeholder='Kabupaten/Kota'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setAlamatObjek((prev)=>{
+                        return {
+                            ...prev,
+                            provinsi:text
+                        }
+                    })
+                }}
+                value={alamatObjek.provinsi}
+                placeholder='Provinsi'/>
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -1677,7 +2242,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text>Luas Tanah (M2)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Luas Tanah'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setArsitekturRumah((prev)=>{
+                        return {
+                            ...prev,
+                            luastanah:text
+                        }
+                    })
+                }}
+                value={arsitekturRumah.luastanah}
+                style={{flex:1}} placeholder='Luas Tanah'/>
                 <Text style={{marginLeft:EStyleSheet.value("10rem")}}>M2</Text>
             </View>
         </View>
@@ -1686,7 +2261,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text>Luas Bangunan (M2)</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Luas Bangunan'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setArsitekturRumah((prev)=>{
+                        return {
+                            ...prev,
+                            luasbangunan:text
+                        }
+                    })
+                }}
+                value={arsitekturRumah.luasbangunan}
+                style={{flex:1}} placeholder='Luas Bangunan'/>
                 <Text style={{marginLeft:EStyleSheet.value("10rem")}}>M2</Text>
             </View>
         </View>
@@ -1695,7 +2280,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text>Jumlah KT</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Jumlah KT'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setArsitekturRumah((prev)=>{
+                        return {
+                            ...prev,
+                            jumlahKT:text
+                        }
+                    })
+                }}
+                value={arsitekturRumah.jumlahKT}
+                style={{flex:1}} placeholder='Jumlah KT'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1703,7 +2298,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text>Jumlah KM</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Jumlah KM'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setArsitekturRumah((prev)=>{
+                        return {
+                            ...prev,
+                            jumlahKM:text
+                        }
+                    })
+                }}
+                value={arsitekturRumah.jumlahKM}
+                style={{flex:1}} placeholder='Jumlah KM'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -1727,7 +2332,7 @@ export default function DetailRiwayatSurveyAwalScreen() {
                    <TouchableOpacity
                    activeOpacity={0.6} 
                    onPress={()=>{
-                       //setShowModalInputKendaraan(true);
+                       setShowModalInputKendaraan(true);
                    }}
                    style={{justifyContent:"center",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
                        <Text style={{color:"black"}}>Daftar Kendaraan</Text>
@@ -1994,7 +2599,7 @@ export default function DetailRiwayatSurveyAwalScreen() {
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
-            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>E. Aksesbilitaas</Text>
+            <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>E. Aksesbilitas</Text>
         </View>
         {/* <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
             <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
@@ -2053,7 +2658,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text>Pasar Terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Pasar Terdekat'/>
+                <TextInput editable={false} 
+                onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            pasarterdekat:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.pasarterdekat}
+                style={{flex:1}} placeholder='Pasar Terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2061,7 +2676,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text>Sekolah Terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Sekolah Terdekat'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            sekolahterdekat:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.sekolahterdekat}
+                style={{flex:1}} placeholder='Sekolah Terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2069,7 +2694,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Stasiun KA/halte bus terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            stasiunkaterdekat:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.stasiunkaterdekat}
+                style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2077,7 +2712,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jarak ke jalur bis/mikrolet terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            jarakkejalurbis:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.jarakkejalurbis}
+                style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2085,7 +2730,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jalur Bus/Mikrolet No.</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            jalurbus:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.jalurbus}
+                style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2093,7 +2748,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Perumahan/Kompleks Perumahan Terdekat</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setAksesbilitas((prev)=>{
+                        return {
+                            ...prev,
+                            perumahanterdekat:text
+                        }
+                    })
+                }}
+                value={aksesbilitas.perumahanterdekat}
+                style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2161,7 +2826,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Permintaan Penjual</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setHarga((prev)=>{
+                        return {
+                            ...prev,
+                            permintaanpenjual:text
+                        }
+                    })
+                }}
+                value={harga.permintaanpenjual}
+                multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
             </View>
         </View>
         <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2169,7 +2844,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                 <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Pasar</Text>
             </View>
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
+                <TextInput editable={false} 
+                 onChangeText={(text)=>{
+                    setHarga((prev)=>{
+                        return {
+                            ...prev,
+                            hargapasar:text
+                        }
+                    })
+                }}
+                value={harga.hargapasar}
+                multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
             </View>
         </View>
         <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2244,8 +2929,32 @@ export default function DetailRiwayatSurveyAwalScreen() {
             <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
                     <TouchableOpacity
                     activeOpacity={0.6} 
-                    onPress={()=>{
-                        setShowModalAmbilKordinat(true);
+                    onPress={async()=>{
+                        let { status } = await Location.requestForegroundPermissionsAsync();
+                        if (status !== 'granted') {
+                          alert('Permission to access location was denied');
+                        }
+                        else{
+                            let enabled = await Location.hasServicesEnabledAsync();
+                            if(enabled){
+                                let provider = await Location.enableNetworkProviderAsync();
+                                 let location = await Location.getCurrentPositionAsync({});
+
+                                // let l = await Location.reverseGeocodeAsync({
+                                //     latitude:location.coords.latitude,
+                                //      longitude:location.coords.longitude
+                                // });
+                                setLocation(location);
+                                setShowModalAmbilKordinat(true);
+                            }   
+                            else{
+                                alert("Not supported service");
+                            }
+                            
+
+                           
+                        }   
+                        
                     }}
                     style={{justifyContent:"center",width:"100%",borderRadius:EStyleSheet.value("5rem"),marginTop:EStyleSheet.value("5rem"),paddingVertical:EStyleSheet.value("3rem"),backgroundColor:"#f6f7fb",alignItems:"center"}}>
                         <Text style={{color:"black"}}>Ambil Kordinat</Text>
@@ -2375,9 +3084,16 @@ export default function DetailRiwayatSurveyAwalScreen() {
             </View>
         </View> */}
         {/* <View style={{paddingVertical:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-            <View style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
+            <Pressable 
+            android_ripple={{
+                color:"white"
+            }}
+            onPress={()=>{
+                setYakinSubmitModal(true);
+            }}
+            style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
                 <Text>Simpan</Text>
-            </View>
+            </Pressable>
         </View> */}
         </View> 
         }
@@ -2395,13 +3111,83 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text>Alamat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput editable={false} placeholder='Line 1'/>
-                        <TextInput editable={false} placeholder='Line 2'/>
-                        <TextInput editable={false} placeholder='RT/RW'/>
-                        <TextInput editable={false} placeholder='Kel/Desa'/>
-                        <TextInput editable={false} placeholder='Kecamatan'/>
-                        <TextInput editable={false} placeholder='Kabupaten/Kota'/>
-                        <TextInput editable={false} placeholder='Provinsi'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    line1:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.line1}
+                        placeholder='Line 1'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    line2:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.line2}
+                        placeholder='Line 2'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    rtrw:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.rtrw}
+                        placeholder='RT/RW'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    keldesa:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.keldesa}
+                        placeholder='Kel/Desa'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    kecamatan:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.kecamatan}
+                        placeholder='Kecamatan'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    kabupatenkota:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.kabupatenkota}
+                        placeholder='Kabupaten/Kota'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAlamatObjek((prev)=>{
+                                return {
+                                    ...prev,
+                                    provinsi:text
+                                }
+                            })
+                        }}
+                        value={alamatObjek.provinsi}
+                        placeholder='Provinsi'/>
                     </View>
                 </View>
                 <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2473,7 +3259,7 @@ export default function DetailRiwayatSurveyAwalScreen() {
                     </View>
                 </View>
                 <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
-                    <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>C. Aksesbilitaas</Text>
+                    <Text style={{color:"#2d2d2a",fontFamily:"NunitoBold",letterSpacing:1.1}}>C. Aksesbilitas</Text>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
                     <View style={{flex:1,paddingLeft:EStyleSheet.value("25rem")}}>
@@ -2516,7 +3302,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text>Pasar Terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput editable={false} style={{flex:1}} placeholder='Pasar Terdekat'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    pasarterdekat:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.pasarterdekat}
+                        style={{flex:1}} placeholder='Pasar Terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2524,7 +3320,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text>Sekolah Terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput editable={false} style={{flex:1}} placeholder='Sekolah Terdekat'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    sekolahterdekat:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.sekolahterdekat}
+                        style={{flex:1}} placeholder='Sekolah Terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2532,7 +3338,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Stasiun KA/halte bus terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput editable={false} style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    stasiunkaterdekat:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.stasiunkaterdekat}
+                        style={{flex:1}} placeholder='Stasiun KA/halte bus terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2540,7 +3356,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jarak ke jalur bis/mikrolet terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput editable={false} style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    jarakkejalurbis:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.jarakkejalurbis}
+                        style={{flex:1}} placeholder='Jarak ke jalur bis/mikrolet terdekat'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2548,7 +3374,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Jalur Bus/Mikrolet No.</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput editable={false} style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    jalurbus:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.jalurbus}
+                        style={{flex:1}} placeholder='Jalur Bus/Mikrolet No.'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2556,7 +3392,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Perumahan/Kompleks Perumahan Terdekat</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput editable={false} style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setAksesbilitas((prev)=>{
+                                return {
+                                    ...prev,
+                                    perumahanterdekat:text
+                                }
+                            })
+                        }}
+                        value={aksesbilitas.perumahanterdekat}
+                        style={{flex:1}} placeholder='Perumahan/Kompleks Perumahan Terdekat'/>
                     </View>
                 </View>
                 <View style={{paddingVertical:EStyleSheet.value("10rem"),backgroundColor:"#f6f7fb",borderTopWidth:1,borderColor:"#e8e8e8",paddingHorizontal:EStyleSheet.value("25rem")}}>
@@ -2624,7 +3470,17 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Permintaan Penjual</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setHarga((prev)=>{
+                                return {
+                                    ...prev,
+                                    permintaanpenjual:text
+                                }
+                            })
+                        }}
+                        value={harga.permintaanpenjual}
+                        multiline={true} style={{flex:1}} placeholder='Harga Permintaan'/>
                     </View>
                 </View>
                 <View style={{justifyContent:"center",alignItems:"center",borderBottomWidth:1,borderColor:"#e8e8e8",flexDirection:"row",backgroundColor:"white"}}>
@@ -2632,13 +3488,54 @@ export default function DetailRiwayatSurveyAwalScreen() {
                         <Text style={{paddingRight:EStyleSheet.value("20rem")}}>Harga Pasar</Text>
                     </View>
                     <View style={{flex:1,backgroundColor:"white",flexDirection:"row",alignItems:"center",paddingVertical:EStyleSheet.value("15rem"),paddingRight:EStyleSheet.value("25rem")}}>
-                        <TextInput editable={false} multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
+                        <TextInput editable={false} 
+                        onChangeText={(text)=>{
+                            setHarga((prev)=>{
+                                return {
+                                    ...prev,
+                                    hargapasar:text
+                                }
+                            })
+                        }}
+                        value={harga.hargapasar}
+                        multiline={true} style={{flex:1}} placeholder='Harga Pasar'/>
                     </View>
                 </View>
                 {/* <View style={{paddingVertical:EStyleSheet.value("20rem"),paddingHorizontal:EStyleSheet.value("20rem")}}>
-                    <View style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
+                    <Pressable 
+                    onPress={()=>{
+                        let payload = {};
+
+                        payload.informasipenjual = informasiPenjual;
+                        payload.alamatobjek = alamatObjek;
+                        payload.fasilitas = {
+                            bisaamprahPLN:bisaAmprahPLN,
+                            bisaamprahPDAM:bisaAmprahPDAM,
+                            adasinyalinternet:adasinyalinternet
+                        };
+                        payload.aksesbilitas = {
+                            ...aksesbilitas,
+                            jalan:jalan,
+                            jalanmasuk:jalanmasuk
+                        };
+                        payload.suasanalingkungan = {
+                            rawanbanjir:rawanbanjir,
+                            keamanan:keamanan,
+                            kebersihan:kebersihan
+                        };
+        
+                        payload.harga = {
+                            ...harga
+                        };
+
+                        console.log(payload);
+                    }}
+                    android_ripple={{
+                        color:"white"
+                    }}
+                    style={{height:EStyleSheet.value("40rem"),justifyContent:"center",alignItems:"center",backgroundColor:"#e8e8e8",borderRadius:EStyleSheet.value("7rem")}}>
                         <Text>Simpan</Text>
-                    </View>
+                    </Pressable>
                 </View> */}
             </View>
         }
